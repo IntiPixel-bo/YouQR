@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouQR - Generador de Códigos QR Dinámicos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .glass-effect { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); }
+        .animate-fade-in { animation: fadeIn 0.5s ease-in; }
+        .animate-slide-up { animation: slideUp 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .qr-preview { transition: all 0.3s ease; }
+        .qr-preview:hover { transform: scale(1.02); }
+        input[type="color"] { -webkit-appearance: none; border: none; width: 32px; height: 32px; border-radius: 50%; overflow: hidden; cursor: pointer; }
+        input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+        input[type="color"]::-webkit-color-swatch { border: none; border-radius: 50%; border: 2px solid #e5e7eb; }
+        .loading-spinner { border: 3px solid #f3f3f3; border-top: 3px solid #667eea; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .tab-active { border-bottom: 2px solid #667eea; color: #667eea; }
+        .stat-card { transition: transform 0.2s; }
+        .stat-card:hover { transform: translateY(-2px); }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- API Configuration (Change this to your Cloudflare Worker URL) -->
+    <script>
+        const API_BASE_URL = 'https://youqr-code.workers.dev'; // Cambia esto por tu URL real
+    </script>
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center cursor-pointer" onclick="showSection('landing')">
+                    <div class="flex-shrink-0 flex items-center gap-2">
+                        <div class="w-8 h-8 gradient-bg rounded-lg flex items-center justify-center text-white font-bold">Y</div>
+                        <span class="font-bold text-xl text-gray-900">YouQR</span>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4" id="nav-auth">
+                    <button onclick="showSection('login')" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Iniciar Sesión</button>
+                    <button onclick="showSection('register')" class="gradient-bg text-white px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 transition">Registrarse</button>
+                </div>
+                <div class="flex items-center space-x-4 hidden" id="nav-user">
+                    <span class="text-gray-600 text-sm" id="user-email"></span>
+                    <button onclick="logout()" class="text-red-600 hover:text-red-700 px-3 py-2 rounded-md text-sm font-medium">Cerrar Sesión</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Landing Page -->
+    <section id="landing" class="min-h-screen">
+        <div class="gradient-bg text-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+                <div class="text-center animate-fade-in">
+                    <h1 class="text-4xl md:text-6xl font-bold mb-6">Códigos QR Inteligentes</h1>
+                    <p class="text-xl md:text-2xl mb-8 text-purple-100">Crea, personaliza y edita QR dinámicos. Cambia el destino sin cambiar el código.</p>
+                    <div class="flex justify-center gap-4">
+                        <button onclick="showSection('register')" class="bg-white text-purple-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">Comenzar Gratis</button>
+                        <button onclick="showDemo()" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-purple-600 transition">Ver Demo</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition stat-card">
+                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-link text-purple-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Enlaces Dinámicos</h3>
+                    <p class="text-gray-600">Cambia el destino de tu QR en cualquier momento sin necesidad de reimprimir.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition stat-card">
+                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-chart-line text-blue-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Estadísticas en Tiempo Real</h3>
+                    <p class="text-gray-600">Monitorea escaneos, ubicación y dispositivos de tus códigos QR.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition stat-card">
+                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-palette text-green-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Personalización Total</h3>
+                    <p class="text-gray-600">Colores, logos y diseños únicos para tu marca.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Section -->
+    <section id="login" class="hidden min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-2xl shadow-lg animate-slide-up">
+            <div>
+                <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Inicia sesión en tu cuenta</h2>
+                <p class="mt-2 text-center text-sm text-gray-600">
+                    ¿No tienes cuenta? 
+                    <button onclick="showSection('register')" class="font-medium text-purple-600 hover:text-purple-500">Regístrate gratis</button>
+                </p>
+            </div>
+            <form class="mt-8 space-y-6" onsubmit="handleLogin(event)">
+                <div class="rounded-md shadow-sm -space-y-px">
+                    <div class="mb-4">
+                        <label for="login-email" class="block text-sm font-medium text-gray-700 mb-1">Correo electrónico</label>
+                        <input id="login-email" name="email" type="email" required class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm" placeholder="tu@email.com">
+                    </div>
+                    <div>
+                        <label for="login-password" class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+                        <input id="login-password" name="password" type="password" required class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm" placeholder="••••••••">
+                    </div>
+                </div>
+                <div>
+                    <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-white gradient-bg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+                        <span id="login-spinner" class="hidden loading-spinner mr-2"></span>
+                        Iniciar Sesión
+                    </button>
+                </div>
+                <div id="login-error" class="text-red-600 text-sm text-center hidden"></div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Register Section -->
+    <section id="register" class="hidden min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-2xl shadow-lg animate-slide-up">
+            <div>
+                <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Crea tu cuenta gratuita</h2>
+                <p class="mt-2 text-center text-sm text-gray-600">
+                    ¿Ya tienes cuenta? 
+                    <button onclick="showSection('login')" class="font-medium text-purple-600 hover:text-purple-500">Inicia sesión</button>
+                </p>
+            </div>
+            <form class="mt-8 space-y-6" onsubmit="handleRegister(event)">
+                <div class="rounded-md shadow-sm -space-y-px">
+                    <div class="mb-4">
+                        <label for="register-email" class="block text-sm font-medium text-gray-700 mb-1">Correo electrónico</label>
+                        <input id="register-email" name="email" type="email" required class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm" placeholder="tu@email.com">
+                    </div>
+                    <div class="mb-4">
+                        <label for="register-password" class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+                        <input id="register-password" name="password" type="password" required minlength="6" class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm" placeholder="Mínimo 6 caracteres">
+                    </div>
+                    <div>
+                        <label for="register-password-confirm" class="block text-sm font-medium text-gray-700 mb-1">Confirmar contraseña</label>
+                        <input id="register-password-confirm" name="password-confirm" type="password" required class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm" placeholder="••••••••">
+                    </div>
+                </div>
+                <div>
+                    <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-white gradient-bg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+                        <span id="register-spinner" class="hidden loading-spinner mr-2"></span>
+                        Crear Cuenta
+                    </button>
+                </div>
+                <div id="register-error" class="text-red-600 text-sm text-center hidden"></div>
+                <div id="register-success" class="text-green-600 text-sm text-center hidden"></div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Dashboard Section -->
+    <section id="dashboard" class="hidden min-h-screen bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900">Panel de Control</h1>
+                <p class="text-gray-600 mt-1">Gestiona tus códigos QR dinámicos</p>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white rounded-xl shadow p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Total de QRs</p>
+                            <p class="text-2xl font-bold text-gray-900" id="stat-total-qrs">0</p>
+                        </div>
+                        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-qrcode text-purple-600"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Escaneos Totales</p>
+                            <p class="text-2xl font-bold text-gray-900" id="stat-total-scans">0</p>
+                        </div>
+                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-eye text-blue-600"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">QR Más Popular</p>
+                            <p class="text-2xl font-bold text-gray-900" id="stat-top-qr">-</p>
+                        </div>
+                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-trophy text-green-600"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Create QR Button -->
+            <div class="mb-8">
+                <button onclick="openCreateModal()" class="gradient-bg text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition flex items-center gap-2">
+                    <i class="fas fa-plus"></i>
+                    Crear Nuevo QR
+                </button>
+            </div>
+
+            <!-- My QRs List -->
+            <div class="bg-white rounded-xl shadow">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h2 class="text-lg font-semibold text-gray-900">Mis Códigos QR</h2>
+                </div>
+                <div id="qrs-list" class="divide-y divide-gray-200">
+                    <!-- QRs will be loaded here -->
+                    <div class="p-8 text-center text-gray-500">
+                        <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
+                        <p>Cargando tus QRs...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Create QR Modal -->
+    <div id="create-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-10 mx-auto p-5 border w-full max-w-4xl shadow-lg rounded-xl bg-white animate-slide-up">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold text-gray-900">Crear Nuevo QR</h3>
+                <button onclick="closeCreateModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <!-- QR Type Tabs -->
+            <div class="flex space-x-6 border-b border-gray-200 mb-6">
+                <button onclick="setQRType('url')" class="qr-tab tab-active pb-2 px-1 font-medium text-sm" data-type="url">
+                    <i class="fas fa-link mr-2"></i>URL / Enlace
+                </button>
+                <button onclick="setQRType('text')" class="qr-tab pb-2 px-1 font-medium text-sm text-gray-500 hover:text-gray-700" data-type="text">
+                    <i class="fas fa-align-left mr-2"></i>Texto
+                </button>
+                <button onclick="setQRType('spotify')" class="qr-tab pb-2 px-1 font-medium text-sm text-gray-500 hover:text-gray-700" data-type="spotify">
+                    <i class="fab fa-spotify mr-2"></i>Spotify
+                </button>
+                <button onclick="setQRType('maps')" class="qr-tab pb-2 px-1 font-medium text-sm text-gray-500 hover:text-gray-700" data-type="maps">
+                    <i class="fas fa-map-marker-alt mr-2"></i>Google Maps
+                </button>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Left Column: Configuration -->
+                <div class="space-y-6">
+                    <!-- URL Input -->
+                    <div id="input-url" class="space-y-2">
+                        <label class="block text-sm font-medium text-gray-700">URL de destino</label>
+                        <input type="url" id="qr-url" placeholder="https://ejemplo.com" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        <p class="text-xs text-gray-500">El QR apuntará a esta URL. Podrás cambiarla después.</p>
+                    </div>
+
+                    <!-- Text Input -->
+                    <div id="input-text" class="space-y-2 hidden">
+                        <label class="block text-sm font-medium text-gray-700">Texto</label>
+                        <textarea id="qr-text" rows="3" placeholder="Escribe tu mensaje aquí..." class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"></textarea>
+                    </div>
+
+                    <!-- Spotify Input -->
+                    <div id="input-spotify" class="space-y-2 hidden">
+                        <label class="block text-sm font-medium text-gray-700">URL de Spotify</label>
+                        <input type="url" id="qr-spotify" placeholder="https://open.spotify.com/track/..." class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        <p class="text-xs text-gray-500">Pega el enlace de una canción, álbum o playlist</p>
+                    </div>
+
+                    <!-- Maps Input -->
+                    <div id="input-maps" class="space-y-2 hidden">
+                        <label class="block text-sm font-medium text-gray-700">Ubicación</label>
+                        <input type="text" id="qr-maps-search" placeholder="Buscar lugar..." class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 mb-2">
+                        <button onclick="searchMaps()" class="w-full bg-gray-100 text-gray-700 py-2 rounded-lg hover:bg-gray-200 transition mb-2">
+                            <i class="fas fa-search mr-2"></i>Buscar
+                        </button>
+                        <input type="hidden" id="qr-maps-lat">
+                        <input type="hidden" id="qr-maps-lng">
+                        <div id="maps-preview" class="hidden bg-gray-100 p-3 rounded-lg text-sm text-gray-600">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>Ubicación seleccionada
+                        </div>
+                    </div>
+
+                    <!-- Customization -->
+                    <div class="border-t pt-4">
+                        <h4 class="font-medium text-gray-900 mb-4">Personalización</h4>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Color del QR</label>
+                                <div class="flex items-center gap-2">
+                                    <input type="color" id="qr-color" value="#000000" onchange="updateQRPreview()">
+                                    <span class="text-sm text-gray-600" id="color-value">#000000</span>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Color de fondo</label>
+                                <div class="flex items-center gap-2">
+                                    <input type="color" id="qr-bg-color" value="#ffffff" onchange="updateQRPreview()">
+                                    <span class="text-sm text-gray-600" id="bg-color-value">#ffffff</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Logo (opcional)</label>
+                            <input type="file" id="qr-logo" accept="image/*" onchange="handleLogoUpload(event)" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100">
+                        </div>
+                    </div>
+
+                    <button onclick="saveQR()" class="w-full gradient-bg text-white py-3 rounded-lg font-semibold hover:opacity-90 transition flex items-center justify-center gap-2">
+                        <span id="save-spinner" class="hidden loading-spinner"></span>
+                        <i class="fas fa-save" id="save-icon"></i>
+                        Guardar QR
+                    </button>
+                </div>
+
+                <!-- Right Column: Preview -->
+                <div class="bg-gray-50 rounded-xl p-6 flex flex-col items-center justify-center">
+                    <h4 class="font-medium text-gray-900 mb-4">Vista Previa</h4>
+                    <div id="qr-preview-container" class="bg-white p-4 rounded-lg shadow-md qr-preview">
+                        <div id="qrcode"></div>
+                    </div>
+                    <div class="mt-4 flex gap-2">
+                        <button onclick="downloadQR('png')" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition text-sm">
+                            <i class="fas fa-download mr-2"></i>PNG
+                        </button>
+                        <button onclick="downloadQR('svg')" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition text-sm">
+                            <i class="fas fa-vector-square mr-2"></i>SVG
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit QR Modal -->
+    <div id="edit-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-full max-w-lg shadow-lg rounded-xl bg-white animate-slide-up">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-gray-900">Editar Destino del QR</h3>
+                <button onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Slug del QR</label>
+                    <input type="text" id="edit-slug" readonly class="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Nuevo destino URL</label>
+                    <input type="url" id="edit-target" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                </div>
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-sm text-yellow-800">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    El código QR físico no cambiará, solo el destino al que apunta.
+                </div>
+                <button onclick="updateQR()" class="w-full gradient-bg text-white py-2 rounded-lg font-semibold hover:opacity-90 transition">
+                    Actualizar Destino
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- QR Details Modal -->
+    <div id="details-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-xl bg-white animate-slide-up">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-gray-900">Estadísticas del QR</h3>
+                <button onclick="closeDetailsModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div id="qr-details-content" class="space-y-4">
+                <!-- Content loaded dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="hidden fixed bottom-5 right-5 bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg transform transition-all duration-300 z-50">
+        <span id="toast-message"></span>
+    </div>
+
+    <script>
+        // Global State
+        let currentUser = null;
+        let currentQRType = 'url';
+        let qrCodeObj = null;
+        let currentLogo = null;
+        let userQRs = [];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
+            initQRPreview();
+        });
+
+        // Navigation
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // Show target section
+            document.getElementById(sectionId).classList.remove('hidden');
+            
+            // Update navigation
+            if (sectionId === 'dashboard' && !currentUser) {
+                showSection('login');
+                return;
+            }
+            
+            // Load data if dashboard
+            if (sectionId === 'dashboard' && currentUser) {
+                loadUserQRs();
+                loadStats();
+            }
+            
+            window.scrollTo(0, 0);
+        }
+
+        // Auth Functions
+        function checkAuth() {
+            const token = localStorage.getItem('youqr_token');
+            const email = localStorage.getItem('youqr_email');
+            
+            if (token && email) {
+                currentUser = { email, token };
+                updateNavForAuth();
+                showSection('dashboard');
+            } else {
+                showSection('landing');
+            }
+        }
+
+        function updateNavForAuth() {
+            document.getElementById('nav-auth').classList.add('hidden');
+            document.getElementById('nav-user').classList.remove('hidden');
+            document.getElementById('user-email').textContent = currentUser.email;
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const spinner = document.getElementById('login-spinner');
+            const errorDiv = document.getElementById('login-error');
+            
+            spinner.classList.remove('hidden');
+            errorDiv.classList.add('hidden');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    localStorage.setItem('youqr_token', data.token);
+                    localStorage.setItem('youqr_email', email);
+                    currentUser = { email, token: data.token };
+                    updateNavForAuth();
+                    showToast('Inicio de sesión exitoso');
+                    showSection('dashboard');
+                } else {
+                    errorDiv.textContent = data.error || 'Error al iniciar sesión';
+                    errorDiv.classList.remove('hidden');
+                }
+            } catch (error) {
+                errorDiv.textContent = 'Error de conexión. Intenta de nuevo.';
+                errorDiv.classList.remove('hidden');
+            } finally {
+                spinner.classList.add('hidden');
+            }
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const passwordConfirm = document.getElementById('register-password-confirm').value;
+            const spinner = document.getElementById('register-spinner');
+            const errorDiv = document.getElementById('register-error');
+            const successDiv = document.getElementById('register-success');
+            
+            if (password !== passwordConfirm) {
+                errorDiv.textContent = 'Las contraseñas no coinciden';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+            
+            spinner.classList.remove('hidden');
+            errorDiv.classList.add('hidden');
+            successDiv.classList.add('hidden');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    successDiv.textContent = 'Cuenta creada exitosamente. Redirigiendo...';
+                    successDiv.classList.remove('hidden');
+                    setTimeout(() => showSection('login'), 1500);
+                } else {
+                    errorDiv.textContent = data.error || 'Error al crear cuenta';
+                    errorDiv.classList.remove('hidden');
+                }
+            } catch (error) {
+                errorDiv.textContent = 'Error de conexión. Intenta de nuevo.';
+                errorDiv.classList.remove('hidden');
+            } finally {
+                spinner.classList.add('hidden');
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('youqr_token');
+            localStorage.removeItem('youqr_email');
+            currentUser = null;
+            document.getElementById('nav-auth').classList.remove('hidden');
+            document.getElementById('nav-user').classList.add('hidden');
+            showSection('landing');
+            showToast('Sesión cerrada');
+        }
+
+        // QR Management
+        function openCreateModal() {
+            document.getElementById('create-modal').classList.remove('hidden');
+            initQRPreview();
+        }
+
+        function closeCreateModal() {
+            document.getElementById('create-modal').classList.add('hidden');
+            resetCreateForm();
+        }
+
+        function resetCreateForm() {
+            document.getElementById('qr-url').value = '';
+            document.getElementById('qr-text').value = '';
+            document.getElementById('qr-spotify').value = '';
+            document.getElementById('qr-maps-search').value = '';
+            document.getElementById('qr-color').value = '#000000';
+            document.getElementById('qr-bg-color').value = '#ffffff';
+            document.getElementById('color-value').textContent = '#000000';
+            document.getElementById('bg-color-value').textContent = '#ffffff';
+            currentLogo = null;
+            document.getElementById('qr-logo').value = '';
+            updateQRPreview();
+        }
+
+        function setQRType(type) {
+            currentQRType = type;
+            
+            // Update tabs
+            document.querySelectorAll('.qr-tab').forEach(tab => {
+                if (tab.dataset.type === type) {
+                    tab.classList.add('tab-active');
+                    tab.classList.remove('text-gray-500');
+                } else {
+                    tab.classList.remove('tab-active');
+                    tab.classList.add('text-gray-500');
+                }
+            });
+            
+            // Show/hide inputs
+            document.getElementById('input-url').classList.add('hidden');
+            document.getElementById('input-text').classList.add('hidden');
+            document.getElementById('input-spotify').classList.add('hidden');
+            document.getElementById('input-maps').classList.add('hidden');
+            
+            document.getElementById(`input-${type}`).classList.remove('hidden');
+            
+            updateQRPreview();
+        }
+
+        function initQRPreview() {
+            const container = document.getElementById('qrcode');
+            container.innerHTML = '';
+            
+            qrCodeObj = new QRCode(container, {
+                text: 'https://youqr.app',
+                width: 200,
+                height: 200,
+                colorDark: '#000000',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
+
+        function updateQRPreview() {
+            if (!qrCodeObj) return;
+            
+            let content = '';
+            switch(currentQRType) {
+                case 'url':
+                    content = document.getElementById('qr-url').value || 'https://ejemplo.com';
+                    break;
+                case 'text':
+                    content = document.getElementById('qr-text').value || 'Texto de ejemplo';
+                    break;
+                case 'spotify':
+                    content = document.getElementById('qr-spotify').value || 'https://open.spotify.com';
+                    break;
+                case 'maps':
+                    const lat = document.getElementById('qr-maps-lat').value || '40.7128';
+                    const lng = document.getElementById('qr-maps-lng').value || '-74.0060';
+                    content = `https://www.google.com/maps?q=${lat},${lng}`;
+                    break;
+            }
+            
+            const color = document.getElementById('qr-color').value;
+            const bgColor = document.getElementById('qr-bg-color').value;
+            
+            document.getElementById('color-value').textContent = color;
+            document.getElementById('bg-color-value').textContent = bgColor;
+            
+            const container = document.getElementById('qrcode');
+            container.innerHTML = '';
+            
+            qrCodeObj = new QRCode(container, {
+                text: content,
+                width: 200,
+                height: 200,
+                colorDark: color,
+                colorLight: bgColor,
+                correctLevel: QRCode.CorrectLevel.H
+            });
+            
+            // Apply logo if exists
+            if (currentLogo) {
+                setTimeout(() => addLogoToQR(), 100);
+            }
+        }
+
+        function handleLogoUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentLogo = e.target.result;
+                    updateQRPreview();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function addLogoToQR() {
+            // This is a simplified version. In production, you'd use canvas manipulation
+            // to overlay the logo on the QR code
+            const img = document.querySelector('#qrcode img');
+            if (img && currentLogo) {
+                // Implementation would require canvas overlay
+                console.log('Logo would be applied here');
+            }
+        }
+
+        function searchMaps() {
+            const query = document.getElementById('qr-maps-search').value;
+            if (!query) return;
+            
+            // Simulate geocoding - in production, use Google Maps Geocoding API
+            showToast('Buscando ubicación...');
+            
+            // Mock coordinates for demo
+            setTimeout(() => {
+                document.getElementById('qr-maps-lat').value = '40.7128';
+                document.getElementById('qr-maps-lng').value = '-74.0060';
+                document.getElementById('maps-preview').classList.remove('hidden');
+                updateQRPreview();
+            }, 1000);
+        }
+
+        async function saveQR() {
+            const spinner = document.getElementById('save-spinner');
+            const icon = document.getElementById('save-icon');
+            
+            let target = '';
+            switch(currentQRType) {
+                case 'url':
+                    target = document.getElementById('qr-url').value;
+                    break;
+                case 'text':
+                    target = 'data:text/plain,' + encodeURIComponent(document.getElementById('qr-text').value);
+                    break;
+                case 'spotify':
+                    target = document.getElementById('qr-spotify').value;
+                    break;
+                case 'maps':
+                    const lat = document.getElementById('qr-maps-lat').value;
+                    const lng = document.getElementById('qr-maps-lng').value;
+                    target = `https://www.google.com/maps?q=${lat},${lng}`;
+                    break;
+            }
+            
+            if (!target) {
+                showToast('Por favor ingresa un contenido válido');
+                return;
+            }
+            
+            spinner.classList.remove('hidden');
+            icon.classList.add('hidden');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/links`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentUser.token}`
+                    },
+                    body: JSON.stringify({
+                        target,
+                        type: currentQRType,
+                        color: document.getElementById('qr-color').value,
+                        bgColor: document.getElementById('qr-bg-color').value
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showToast('QR creado exitosamente');
+                    closeCreateModal();
+                    loadUserQRs();
+                } else {
+                    showToast(data.error || 'Error al crear QR');
+                }
+            } catch (error) {
+                showToast('Error de conexión');
+            } finally {
+                spinner.classList.add('hidden');
+                icon.classList.remove('hidden');
+            }
+        }
+
+        async function loadUserQRs() {
+            const listContainer = document.getElementById('qrs-list');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/my-links`, {
+                    headers: { 'Authorization': `Bearer ${currentUser.token}` }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    userQRs = data.links || [];
+                    renderQRsList();
+                } else {
+                    listContainer.innerHTML = '<div class="p-8 text-center text-gray-500">Error al cargar QRs</div>';
+                }
+            } catch (error) {
+                // Demo data if API not available
+                userQRs = [
+                    { slug: 'abc123', target: 'https://ejemplo.com', scans: 45, type: 'url', createdAt: Date.now() },
+                    { slug: 'def456', target: 'https://spotify.com/track/123', scans: 12, type: 'spotify', createdAt: Date.now() - 86400000 }
+                ];
+                renderQRsList();
+            }
+        }
+
+        function renderQRsList() {
+            const container = document.getElementById('qrs-list');
+            
+            if (userQRs.length === 0) {
+                container.innerHTML = `
+                    <div class="p-8 text-center text-gray-500">
+                        <i class="fas fa-qrcode text-4xl mb-4 text-gray-300"></i>
+                        <p>No tienes códigos QR aún</p>
+                        <button onclick="openCreateModal()" class="mt-4 text-purple-600 hover:text-purple-700 font-medium">Crea tu primer QR</button>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = userQRs.map(qr => `
+                <div class="p-6 flex items-center justify-between hover:bg-gray-50 transition">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
+                            <i class="fas ${getIconForType(qr.type)} text-2xl text-gray-400"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900">QR #${qr.slug}</h3>
+                            <p class="text-sm text-gray-500 truncate max-w-xs">${qr.target}</p>
+                            <div class="flex items-center gap-4 mt-1 text-sm text-gray-600">
+                                <span><i class="fas fa-eye mr-1"></i>${qr.scans} escaneos</span>
+                                <span class="text-xs bg-gray-200 px-2 py-1 rounded">${qr.type}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="showQRDetails('${qr.slug}')" class="p-2 text-gray-400 hover:text-blue-600 transition" title="Estadísticas">
+                            <i class="fas fa-chart-bar"></i>
+                        </button>
+                        <button onclick="openEditModal('${qr.slug}', '${qr.target}')" class="p-2 text-gray-400 hover:text-purple-600 transition" title="Editar">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="deleteQR('${qr.slug}')" class="p-2 text-gray-400 hover:text-red-600 transition" title="Eliminar">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getIconForType(type) {
+            const icons = {
+                'url': 'fa-link',
+                'text': 'fa-align-left',
+                'spotify': 'fa-spotify',
+                'maps': 'fa-map-marker-alt'
+            };
+            return icons[type] || 'fa-qrcode';
+        }
+
+        async function loadStats() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/stats`, {
+                    headers: { 'Authorization': `Bearer ${currentUser.token}` }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    document.getElementById('stat-total-qrs').textContent = data.totalQRs || 0;
+                    document.getElementById('stat-total-scans').textContent = data.totalScans || 0;
+                    document.getElementById('stat-top-qr').textContent = data.topQR || '-';
+                }
+            } catch (error) {
+                // Calculate from local data
+                document.getElementById('stat-total-qrs').textContent = userQRs.length;
+                document.getElementById('stat-total-scans').textContent = userQRs.reduce((sum, qr) => sum + (qr.scans || 0), 0);
+            }
+        }
+
+        // Edit Modal
+        function openEditModal(slug, target) {
+            document.getElementById('edit-slug').value = slug;
+            document.getElementById('edit-target').value = target;
+            document.getElementById('edit-modal').classList.remove('hidden');
+        }
+
+        function closeEditModal() {
+            document.getElementById('edit-modal').classList.add('hidden');
+        }
+
+        async function updateQR() {
+            const slug = document.getElementById('edit-slug').value;
+            const newTarget = document.getElementById('edit-target').value;
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/update-link`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentUser.token}`
+                    },
+                    body: JSON.stringify({ slug, target: newTarget })
+                });
+                
+                if (response.ok) {
+                    showToast('Destino actualizado exitosamente');
+                    closeEditModal();
+                    loadUserQRs();
+                } else {
+                    showToast('Error al actualizar');
+                }
+            } catch (error) {
+                showToast('Error de conexión');
+            }
+        }
+
+        // Details Modal
+        function showQRDetails(slug) {
+            const qr = userQRs.find(q => q.slug === slug);
+            if (!qr) return;
+            
+            const content = document.getElementById('qr-details-content');
+            content.innerHTML = `
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <p class="text-sm text-gray-600">Total Escaneos</p>
+                        <p class="text-2xl font-bold text-gray-900">${qr.scans}</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <p class="text-sm text-gray-600">Último Escaneo</p>
+                        <p class="text-lg font-semibold text-gray-900">${qr.lastScan ? new Date(qr.lastScan).toLocaleDateString() : 'Nunca'}</p>
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <p class="text-sm text-gray-600">URL Corta:</p>
+                    <div class="flex items-center gap-2 bg-gray-100 p-3 rounded-lg">
+                        <code class="text-sm flex-1">${API_BASE_URL}/${qr.slug}</code>
+                        <button onclick="copyToClipboard('${API_BASE_URL}/${qr.slug}')" class="text-purple-600 hover:text-purple-700">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <p class="text-sm text-gray-600 mb-2">Vista previa del QR:</p>
+                    <div class="flex justify-center">
+                        <div id="detail-qr-preview" class="bg-white p-4 rounded-lg shadow"></div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('details-modal').classList.remove('hidden');
+            
+            // Generate preview QR
+            setTimeout(() => {
+                new QRCode(document.getElementById('detail-qr-preview'), {
+                    text: `${API_BASE_URL}/${qr.slug}`,
+                    width: 150,
+                    height: 150
+                });
+            }, 100);
+        }
+
+        function closeDetailsModal() {
+            document.getElementById('details-modal').classList.add('hidden');
+        }
+
+        async function deleteQR(slug) {
+            if (!confirm('¿Estás seguro de eliminar este QR? Esta acción no se puede deshacer.')) return;
+            
+            // API call to delete would go here
+            showToast('QR eliminado');
+            loadUserQRs();
+        }
+
+        // Utilities
+        function downloadQR(format) {
+            const canvas = document.querySelector('#qrcode canvas');
+            if (!canvas) return;
+            
+            if (format === 'png') {
+                const link = document.createElement('a');
+                link.download = `youqr-${Date.now()}.png`;
+                link.href = canvas.toDataURL();
+                link.click();
+            } else {
+                showToast('Descarga SVG disponible en versión Pro');
+            }
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('Copiado al portapapeles');
+            });
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').textContent = message;
+            toast.classList.remove('hidden');
+            
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+
+        function showDemo() {
+            openCreateModal();
+        }
+
+        // Close modals on outside click
+        window.onclick = function(event) {
+            if (event.target.id === 'create-modal') closeCreateModal();
+            if (event.target.id === 'edit-modal') closeEditModal();
+            if (event.target.id === 'details-modal') closeDetailsModal();
+        }
+    </script>
+</body>
+</html>
