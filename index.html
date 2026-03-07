@@ -26,15 +26,126 @@
         .tab-active { border-bottom: 2px solid #667eea; color: #667eea; }
         .stat-card { transition: transform 0.2s; }
         .stat-card:hover { transform: translateY(-2px); }
+        
+        /* Nuevos estilos para QR personalizado */
+        .qr-frame {
+            position: relative;
+            display: inline-block;
+            padding: 20px;
+            border-radius: 20px;
+            background: white;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+        
+        .qr-frame.rounded { border-radius: 30px; }
+        .qr-frame.circle { border-radius: 50%; padding: 30px; }
+        .qr-frame.dotted { border: 4px dotted #667eea; }
+        .qr-frame.dashed { border: 4px dashed #764ba2; }
+        .qr-frame.double { border: 6px double #667eea; }
+        .qr-frame.glow { 
+            box-shadow: 0 0 30px rgba(102, 126, 234, 0.5), 0 20px 60px rgba(0,0,0,0.15);
+        }
+        .qr-frame.neon {
+            box-shadow: 0 0 20px #667eea, 0 0 40px #764ba2, 0 20px 60px rgba(0,0,0,0.2);
+            border: 2px solid #667eea;
+        }
+        
+        .qr-logo-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border: 3px solid white;
+            z-index: 10;
+            overflow: hidden;
+        }
+        
+        .qr-logo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .qr-logo-container.square {
+            border-radius: 12px;
+        }
+        
+        .qr-logo-container.rounded {
+            border-radius: 16px;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .pattern-grid {
+            background-image: radial-gradient(circle, #e5e7eb 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        
+        .frame-selector {
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+        
+        .frame-selector:hover {
+            transform: scale(1.05);
+        }
+        
+        .frame-selector.active {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+        
+        .shape-selector {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #e5e7eb;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .shape-selector:hover { border-color: #667eea; }
+        .shape-selector.active { 
+            border-color: #667eea; 
+            background: rgba(102, 126, 234, 0.1);
+        }
+        
+        .qr-name-input {
+            text-align: center;
+            font-weight: 600;
+            color: #374151;
+            border: 2px dashed #d1d5db;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        
+        .qr-name-input:focus {
+            outline: none;
+            border-color: #667eea;
+            border-style: solid;
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
 
     <!-- ==========================================
-         CONFIGURACIÓN API - URL CORREGIDA
+         CONFIGURACIÓN API
          ========================================== -->
     <script>
-        // ⚠️ IMPORTANTE: Sin espacios al final de la URL
         const API_BASE_URL = 'https://qr.youqr-code.workers.dev';
     </script>
 
@@ -96,7 +207,7 @@
                         <i class="fas fa-palette text-green-600 text-xl"></i>
                     </div>
                     <h3 class="text-xl font-semibold mb-2">Personalización Total</h3>
-                    <p class="text-gray-600">Colores, logos y diseños únicos para tu marca.</p>
+                    <p class="text-gray-600">Marcos, colores, logos y diseños únicos para tu marca.</p>
                 </div>
             </div>
         </div>
@@ -239,9 +350,9 @@
         </div>
     </section>
 
-    <!-- Create QR Modal -->
+    <!-- Create QR Modal - MEJORADO -->
     <div id="create-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-        <div class="relative top-10 mx-auto p-5 border w-full max-w-4xl shadow-lg rounded-xl bg-white animate-slide-up">
+        <div class="relative top-5 mx-auto p-5 border w-full max-w-5xl shadow-lg rounded-xl bg-white animate-slide-up">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-2xl font-bold text-gray-900">Crear Nuevo QR</h3>
                 <button onclick="closeCreateModal()" class="text-gray-400 hover:text-gray-600">
@@ -265,9 +376,16 @@
                 </button>
             </div>
 
-            <div class="grid md:grid-cols-2 gap-8">
+            <div class="grid lg:grid-cols-2 gap-8">
                 <!-- Left Column: Configuration -->
-                <div class="space-y-6">
+                <div class="space-y-6 max-h-[70vh] overflow-y-auto pr-2">
+                    
+                    <!-- Nombre del QR -->
+                    <div class="bg-purple-50 p-4 rounded-xl">
+                        <label class="block text-sm font-medium text-purple-900 mb-2">Nombre del QR (opcional)</label>
+                        <input type="text" id="qr-name" placeholder="Ej: Mi Instagram, Web Oficial..." class="qr-name-input w-full bg-white" oninput="updateQRName()">
+                    </div>
+
                     <!-- URL Input -->
                     <div id="input-url" class="space-y-2">
                         <label class="block text-sm font-medium text-gray-700">URL de destino</label>
@@ -302,9 +420,9 @@
                         </div>
                     </div>
 
-                    <!-- Customization -->
+                    <!-- Colores -->
                     <div class="border-t pt-4">
-                        <h4 class="font-medium text-gray-900 mb-4">Personalización</h4>
+                        <h4 class="font-medium text-gray-900 mb-4">Colores</h4>
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Color del QR</label>
@@ -321,9 +439,54 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="mt-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Logo (opcional)</label>
-                            <input type="file" id="qr-logo" accept="image/*" onchange="handleLogoUpload(event)" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100">
+                    </div>
+
+                    <!-- Logo -->
+                    <div class="border-t pt-4">
+                        <h4 class="font-medium text-gray-900 mb-4">Logo Central</h4>
+                        <input type="file" id="qr-logo" accept="image/*" onchange="handleLogoUpload(event)" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100 mb-4">
+                        
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Forma del logo</label>
+                        <div class="flex gap-3 mb-4">
+                            <div class="shape-selector rounded-full active" onclick="setLogoShape('circle')" title="Circular"></div>
+                            <div class="shape-selector rounded-lg" onclick="setLogoShape('rounded')" title="Redondeado"></div>
+                            <div class="shape-selector" onclick="setLogoShape('square')" title="Cuadrado" style="border-radius: 4px;"></div>
+                        </div>
+                        
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" id="logo-bg-transparent" onchange="updateQRPreview()">
+                            <span class="text-sm text-gray-700">Fondo transparente del logo</span>
+                        </label>
+                    </div>
+
+                    <!-- Marcos/Frames -->
+                    <div class="border-t pt-4">
+                        <h4 class="font-medium text-gray-900 mb-4">Marco del QR</h4>
+                        <div class="grid grid-cols-3 gap-3">
+                            <div class="frame-selector active p-3 rounded-lg bg-gray-50 text-center" onclick="setFrame('none')" data-frame="none">
+                                <div class="w-12 h-12 mx-auto mb-2 bg-white border-2 border-gray-300"></div>
+                                <span class="text-xs">Simple</span>
+                            </div>
+                            <div class="frame-selector p-3 rounded-lg bg-gray-50 text-center" onclick="setFrame('rounded')" data-frame="rounded">
+                                <div class="w-12 h-12 mx-auto mb-2 bg-white border-2 border-gray-300 rounded-xl"></div>
+                                <span class="text-xs">Redondeado</span>
+                            </div>
+                            <div class="frame-selector p-3 rounded-lg bg-gray-50 text-center" onclick="setFrame('circle')" data-frame="circle">
+                                <div class="w-12 h-12 mx-auto mb-2 bg-white border-2 border-gray-300 rounded-full"></div>
+                                <span class="text-xs">Circular</span>
+                            </div>
+                            <div class="frame-selector p-3 rounded-lg bg-gray-50 text-center" onclick="setFrame('dotted')" data-frame="dotted">
+                                <div class="w-12 h-12 mx-auto mb-2 bg-white border-2 border-dotted border-purple-500"></div>
+                                <span class="text-xs">Punteado</span>
+                            </div>
+                            <div class="frame-selector p-3 rounded-lg bg-gray-50 text-center" onclick="setFrame('glow')" data-frame="glow">
+                                <div class="w-12 h-12 mx-auto mb-2 bg-white border-2 border-purple-500 shadow-lg shadow-purple-300"></div>
+                                <span class="text-xs">Brillo</span>
+                            </div>
+                            <div class="frame-selector p-3 rounded-lg bg-gray-50 text-center" onclick="setFrame('neon')" data-frame="neon">
+                                <div class="w-12 h-12 mx-auto mb-2 bg-white border-2 border-purple-500 shadow-[0_0_10px_#667eea]"></div>
+                                <span class="text-xs">Neón</span>
+                            </div>
                         </div>
                     </div>
 
@@ -335,19 +498,35 @@
                 </div>
 
                 <!-- Right Column: Preview -->
-                <div class="bg-gray-50 rounded-xl p-6 flex flex-col items-center justify-center">
-                    <h4 class="font-medium text-gray-900 mb-4">Vista Previa</h4>
-                    <div id="qr-preview-container" class="bg-white p-4 rounded-lg shadow-md qr-preview">
+                <div class="bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl p-8 flex flex-col items-center justify-center pattern-grid">
+                    <h4 class="font-medium text-gray-900 mb-6">Vista Previa</h4>
+                    
+                    <!-- Nombre del QR -->
+                    <div id="qr-display-name" class="text-lg font-bold text-gray-800 mb-4 hidden"></div>
+                    
+                    <!-- Contenedor del QR con marco -->
+                    <div id="qr-frame-container" class="qr-frame">
                         <div id="qrcode"></div>
+                        <div id="qr-logo" class="qr-logo-container hidden">
+                            <img id="qr-logo-img" src="" alt="Logo">
+                        </div>
                     </div>
-                    <div class="mt-4 flex gap-2">
-                        <button onclick="downloadQR('png')" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition text-sm">
+                    
+                    <div class="mt-6 flex gap-3">
+                        <button onclick="downloadQR('png')" class="px-4 py-2 bg-white text-gray-700 rounded-lg hover:bg-gray-50 transition text-sm shadow-md">
                             <i class="fas fa-download mr-2"></i>PNG
                         </button>
-                        <button onclick="downloadQR('svg')" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition text-sm">
+                        <button onclick="downloadQR('svg')" class="px-4 py-2 bg-white text-gray-700 rounded-lg hover:bg-gray-50 transition text-sm shadow-md">
                             <i class="fas fa-vector-square mr-2"></i>SVG
                         </button>
+                        <button onclick="downloadQR('pdf')" class="px-4 py-2 bg-white text-gray-700 rounded-lg hover:bg-gray-50 transition text-sm shadow-md">
+                            <i class="fas fa-file-pdf mr-2"></i>PDF
+                        </button>
                     </div>
+                    
+                    <p class="text-xs text-gray-500 mt-4 text-center">
+                        Escanea para probar • Resolución: 1000x1000px
+                    </p>
                 </div>
             </div>
         </div>
@@ -408,6 +587,8 @@
         let currentQRType = 'url';
         let qrCodeObj = null;
         let currentLogo = null;
+        let currentLogoShape = 'circle';
+        let currentFrame = 'none';
         let userQRs = [];
 
         // Initialize
@@ -418,21 +599,17 @@
 
         // Navigation
         function showSection(sectionId) {
-            // Hide all sections
             document.querySelectorAll('section').forEach(section => {
                 section.classList.add('hidden');
             });
             
-            // Show target section
             document.getElementById(sectionId).classList.remove('hidden');
             
-            // Update navigation
             if (sectionId === 'dashboard' && !currentUser) {
                 showSection('login');
                 return;
             }
             
-            // Load data if dashboard
             if (sectionId === 'dashboard' && currentUser) {
                 loadUserQRs();
                 loadStats();
@@ -492,7 +669,6 @@
                     errorDiv.classList.remove('hidden');
                 }
             } catch (error) {
-                console.error('Error:', error);
                 errorDiv.textContent = 'Error de conexión. Verifica tu conexión a internet.';
                 errorDiv.classList.remove('hidden');
             } finally {
@@ -537,7 +713,6 @@
                     errorDiv.classList.remove('hidden');
                 }
             } catch (error) {
-                console.error('Error:', error);
                 errorDiv.textContent = 'Error de conexión. Intenta de nuevo.';
                 errorDiv.classList.remove('hidden');
             } finally {
@@ -567,6 +742,7 @@
         }
 
         function resetCreateForm() {
+            document.getElementById('qr-name').value = '';
             document.getElementById('qr-url').value = '';
             document.getElementById('qr-text').value = '';
             document.getElementById('qr-spotify').value = '';
@@ -575,15 +751,27 @@
             document.getElementById('qr-bg-color').value = '#ffffff';
             document.getElementById('color-value').textContent = '#000000';
             document.getElementById('bg-color-value').textContent = '#ffffff';
+            document.getElementById('qr-display-name').classList.add('hidden');
             currentLogo = null;
-            document.getElementById('qr-logo').value = '';
+            currentFrame = 'none';
+            currentLogoShape = 'circle';
+            document.getElementById('qr-logo').classList.add('hidden');
+            document.getElementById('qr-logo-img').src = '';
+            
+            // Reset frame selection
+            document.querySelectorAll('.frame-selector').forEach(el => el.classList.remove('active'));
+            document.querySelector('[data-frame="none"]').classList.add('active');
+            
+            // Reset logo shape
+            document.querySelectorAll('.shape-selector').forEach(el => el.classList.remove('active'));
+            document.querySelector('.shape-selector.rounded-full').classList.add('active');
+            
             updateQRPreview();
         }
 
         function setQRType(type) {
             currentQRType = type;
             
-            // Update tabs
             document.querySelectorAll('.qr-tab').forEach(tab => {
                 if (tab.dataset.type === type) {
                     tab.classList.add('tab-active');
@@ -594,7 +782,6 @@
                 }
             });
             
-            // Show/hide inputs
             document.getElementById('input-url').classList.add('hidden');
             document.getElementById('input-text').classList.add('hidden');
             document.getElementById('input-spotify').classList.add('hidden');
@@ -605,14 +792,55 @@
             updateQRPreview();
         }
 
+        function updateQRName() {
+            const name = document.getElementById('qr-name').value;
+            const display = document.getElementById('qr-display-name');
+            if (name) {
+                display.textContent = name;
+                display.classList.remove('hidden');
+            } else {
+                display.classList.add('hidden');
+            }
+        }
+
+        function setLogoShape(shape) {
+            currentLogoShape = shape;
+            document.querySelectorAll('.shape-selector').forEach(el => el.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const logoContainer = document.getElementById('qr-logo');
+            logoContainer.className = 'qr-logo-container';
+            
+            if (shape === 'circle') {
+                logoContainer.classList.add('rounded-full');
+            } else if (shape === 'rounded') {
+                logoContainer.classList.add('rounded');
+            } else if (shape === 'square') {
+                logoContainer.classList.add('square');
+            }
+        }
+
+        function setFrame(frame) {
+            currentFrame = frame;
+            document.querySelectorAll('.frame-selector').forEach(el => el.classList.remove('active'));
+            document.querySelector(`[data-frame="${frame}"]`).classList.add('active');
+            
+            const container = document.getElementById('qr-frame-container');
+            container.className = 'qr-frame';
+            
+            if (frame !== 'none') {
+                container.classList.add(frame);
+            }
+        }
+
         function initQRPreview() {
             const container = document.getElementById('qrcode');
             container.innerHTML = '';
             
             qrCodeObj = new QRCode(container, {
                 text: 'https://youqr.app',
-                width: 200,
-                height: 200,
+                width: 250,
+                height: 250,
                 colorDark: '#000000',
                 colorLight: '#ffffff',
                 correctLevel: QRCode.CorrectLevel.H
@@ -651,15 +879,21 @@
             
             qrCodeObj = new QRCode(container, {
                 text: content,
-                width: 200,
-                height: 200,
+                width: 250,
+                height: 250,
                 colorDark: color,
                 colorLight: bgColor,
                 correctLevel: QRCode.CorrectLevel.H
             });
             
+            // Apply logo if exists
             if (currentLogo) {
-                setTimeout(() => addLogoToQR(), 100);
+                setTimeout(() => {
+                    const logoContainer = document.getElementById('qr-logo');
+                    const logoImg = document.getElementById('qr-logo-img');
+                    logoImg.src = currentLogo;
+                    logoContainer.classList.remove('hidden');
+                }, 100);
             }
         }
 
@@ -675,18 +909,12 @@
             }
         }
 
-        function addLogoToQR() {
-            // Implementation for logo overlay would go here
-            console.log('Logo would be applied here');
-        }
-
         function searchMaps() {
             const query = document.getElementById('qr-maps-search').value;
             if (!query) return;
             
             showToast('Buscando ubicación...');
             
-            // Mock geocoding - in production, use Google Maps Geocoding API
             setTimeout(() => {
                 document.getElementById('qr-maps-lat').value = '40.7128';
                 document.getElementById('qr-maps-lng').value = '-74.0060';
@@ -736,7 +964,10 @@
                         target,
                         type: currentQRType,
                         color: document.getElementById('qr-color').value,
-                        bgColor: document.getElementById('qr-bg-color').value
+                        bgColor: document.getElementById('qr-bg-color').value,
+                        name: document.getElementById('qr-name').value,
+                        frame: currentFrame,
+                        logoShape: currentLogoShape
                     })
                 });
                 
@@ -750,7 +981,6 @@
                     showToast(data.error || 'Error al crear QR');
                 }
             } catch (error) {
-                console.error('Error:', error);
                 showToast('Error de conexión al guardar');
             } finally {
                 spinner.classList.add('hidden');
@@ -775,8 +1005,6 @@
                     listContainer.innerHTML = '<div class="p-8 text-center text-gray-500">Error al cargar QRs</div>';
                 }
             } catch (error) {
-                console.error('Error cargando QRs:', error);
-                // Demo data if API not available
                 userQRs = [
                     { slug: 'abc123', target: 'https://ejemplo.com', scans: 45, type: 'url', createdAt: Date.now() },
                     { slug: 'def456', target: 'https://spotify.com/track/123', scans: 12, type: 'spotify', createdAt: Date.now() - 86400000 }
@@ -806,7 +1034,7 @@
                             <i class="fas ${getIconForType(qr.type)} text-2xl text-gray-400"></i>
                         </div>
                         <div>
-                            <h3 class="text-lg font-semibold text-gray-900">QR #${qr.slug}</h3>
+                            <h3 class="text-lg font-semibold text-gray-900">${qr.name || 'QR #' + qr.slug}</h3>
                             <p class="text-sm text-gray-500 truncate max-w-xs">${qr.target}</p>
                             <div class="flex items-center gap-4 mt-1 text-sm text-gray-600">
                                 <span><i class="fas fa-eye mr-1"></i>${qr.scans} escaneos</span>
@@ -853,8 +1081,6 @@
                     document.getElementById('stat-top-qr').textContent = data.topQR || '-';
                 }
             } catch (error) {
-                console.error('Error cargando stats:', error);
-                // Calculate from local data
                 document.getElementById('stat-total-qrs').textContent = userQRs.length;
                 document.getElementById('stat-total-scans').textContent = userQRs.reduce((sum, qr) => sum + (qr.scans || 0), 0);
             }
@@ -895,7 +1121,6 @@
                     showToast(data.error || 'Error al actualizar');
                 }
             } catch (error) {
-                console.error('Error:', error);
                 showToast('Error de conexión');
             }
         }
@@ -981,12 +1206,59 @@
             if (!canvas) return;
             
             if (format === 'png') {
-                const link = document.createElement('a');
-                link.download = `youqr-${Date.now()}.png`;
-                link.href = canvas.toDataURL();
-                link.click();
-            } else {
+                // Crear canvas de alta resolución
+                const highResCanvas = document.createElement('canvas');
+                const ctx = highResCanvas.getContext('2d');
+                highResCanvas.width = 1000;
+                highResCanvas.height = 1000;
+                
+                // Dibujar fondo
+                const bgColor = document.getElementById('qr-bg-color').value;
+                ctx.fillStyle = bgColor;
+                ctx.fillRect(0, 0, 1000, 1000);
+                
+                // Dibujar QR escalado
+                ctx.drawImage(canvas, 0, 0, 1000, 1000);
+                
+                // Agregar logo si existe
+                if (currentLogo) {
+                    const logoSize = 200;
+                    const x = (1000 - logoSize) / 2;
+                    const y = (1000 - logoSize) / 2;
+                    
+                    const logoImg = new Image();
+                    logoImg.onload = function() {
+                        // Fondo blanco para el logo
+                        ctx.fillStyle = 'white';
+                        ctx.beginPath();
+                        ctx.arc(500, 500, logoSize/2 + 10, 0, 2 * Math.PI);
+                        ctx.fill();
+                        
+                        // Logo
+                        ctx.save();
+                        ctx.beginPath();
+                        ctx.arc(500, 500, logoSize/2, 0, 2 * Math.PI);
+                        ctx.clip();
+                        ctx.drawImage(logoImg, x, y, logoSize, logoSize);
+                        ctx.restore();
+                        
+                        // Descargar
+                        const link = document.createElement('a');
+                        link.download = `youqr-${Date.now()}.png`;
+                        link.href = highResCanvas.toDataURL('image/png');
+                        link.click();
+                    };
+                    logoImg.src = currentLogo;
+                } else {
+                    const link = document.createElement('a');
+                    link.download = `youqr-${Date.now()}.png`;
+                    link.href = highResCanvas.toDataURL('image/png');
+                    link.click();
+                }
+            } else if (format === 'svg') {
                 showToast('Descarga SVG disponible en versión Pro');
+            } else if (format === 'pdf') {
+                showToast('Descarga PDF disponible en versión Pro');
             }
         }
 
