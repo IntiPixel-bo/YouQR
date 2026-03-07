@@ -30,9 +30,12 @@
 </head>
 <body class="bg-gray-50 text-gray-800">
 
-    <!-- API Configuration (Change this to your Cloudflare Worker URL) -->
+    <!-- ==========================================
+         CONFIGURACIÓN API - URL CORREGIDA
+         ========================================== -->
     <script>
-        const API_BASE_URL = 'https://qr.youqr-code.workers.dev'; // Cambia esto por tu URL real
+        // ⚠️ IMPORTANTE: Sin espacios al final de la URL
+        const API_BASE_URL = 'https://qr.youqr-code.workers.dev';
     </script>
 
     <!-- Navigation -->
@@ -227,7 +230,6 @@
                     <h2 class="text-lg font-semibold text-gray-900">Mis Códigos QR</h2>
                 </div>
                 <div id="qrs-list" class="divide-y divide-gray-200">
-                    <!-- QRs will be loaded here -->
                     <div class="p-8 text-center text-gray-500">
                         <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
                         <p>Cargando tus QRs...</p>
@@ -269,20 +271,20 @@
                     <!-- URL Input -->
                     <div id="input-url" class="space-y-2">
                         <label class="block text-sm font-medium text-gray-700">URL de destino</label>
-                        <input type="url" id="qr-url" placeholder="https://ejemplo.com" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        <input type="url" id="qr-url" placeholder="https://ejemplo.com" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" oninput="updateQRPreview()">
                         <p class="text-xs text-gray-500">El QR apuntará a esta URL. Podrás cambiarla después.</p>
                     </div>
 
                     <!-- Text Input -->
                     <div id="input-text" class="space-y-2 hidden">
                         <label class="block text-sm font-medium text-gray-700">Texto</label>
-                        <textarea id="qr-text" rows="3" placeholder="Escribe tu mensaje aquí..." class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"></textarea>
+                        <textarea id="qr-text" rows="3" placeholder="Escribe tu mensaje aquí..." class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" oninput="updateQRPreview()"></textarea>
                     </div>
 
                     <!-- Spotify Input -->
                     <div id="input-spotify" class="space-y-2 hidden">
                         <label class="block text-sm font-medium text-gray-700">URL de Spotify</label>
-                        <input type="url" id="qr-spotify" placeholder="https://open.spotify.com/track/..." class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        <input type="url" id="qr-spotify" placeholder="https://open.spotify.com/track/..." class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" oninput="updateQRPreview()">
                         <p class="text-xs text-gray-500">Pega el enlace de una canción, álbum o playlist</p>
                     </div>
 
@@ -478,7 +480,7 @@
                 
                 const data = await response.json();
                 
-                if (response.ok) {
+                if (response.ok && data.success) {
                     localStorage.setItem('youqr_token', data.token);
                     localStorage.setItem('youqr_email', email);
                     currentUser = { email, token: data.token };
@@ -490,7 +492,8 @@
                     errorDiv.classList.remove('hidden');
                 }
             } catch (error) {
-                errorDiv.textContent = 'Error de conexión. Intenta de nuevo.';
+                console.error('Error:', error);
+                errorDiv.textContent = 'Error de conexión. Verifica tu conexión a internet.';
                 errorDiv.classList.remove('hidden');
             } finally {
                 spinner.classList.add('hidden');
@@ -525,7 +528,7 @@
                 
                 const data = await response.json();
                 
-                if (response.ok) {
+                if (response.ok && data.success) {
                     successDiv.textContent = 'Cuenta creada exitosamente. Redirigiendo...';
                     successDiv.classList.remove('hidden');
                     setTimeout(() => showSection('login'), 1500);
@@ -534,6 +537,7 @@
                     errorDiv.classList.remove('hidden');
                 }
             } catch (error) {
+                console.error('Error:', error);
                 errorDiv.textContent = 'Error de conexión. Intenta de nuevo.';
                 errorDiv.classList.remove('hidden');
             } finally {
@@ -654,7 +658,6 @@
                 correctLevel: QRCode.CorrectLevel.H
             });
             
-            // Apply logo if exists
             if (currentLogo) {
                 setTimeout(() => addLogoToQR(), 100);
             }
@@ -673,23 +676,17 @@
         }
 
         function addLogoToQR() {
-            // This is a simplified version. In production, you'd use canvas manipulation
-            // to overlay the logo on the QR code
-            const img = document.querySelector('#qrcode img');
-            if (img && currentLogo) {
-                // Implementation would require canvas overlay
-                console.log('Logo would be applied here');
-            }
+            // Implementation for logo overlay would go here
+            console.log('Logo would be applied here');
         }
 
         function searchMaps() {
             const query = document.getElementById('qr-maps-search').value;
             if (!query) return;
             
-            // Simulate geocoding - in production, use Google Maps Geocoding API
             showToast('Buscando ubicación...');
             
-            // Mock coordinates for demo
+            // Mock geocoding - in production, use Google Maps Geocoding API
             setTimeout(() => {
                 document.getElementById('qr-maps-lat').value = '40.7128';
                 document.getElementById('qr-maps-lng').value = '-74.0060';
@@ -708,7 +705,7 @@
                     target = document.getElementById('qr-url').value;
                     break;
                 case 'text':
-                    target = 'data:text/plain,' + encodeURIComponent(document.getElementById('qr-text').value);
+                    target = document.getElementById('qr-text').value;
                     break;
                 case 'spotify':
                     target = document.getElementById('qr-spotify').value;
@@ -745,7 +742,7 @@
                 
                 const data = await response.json();
                 
-                if (response.ok) {
+                if (response.ok && data.success) {
                     showToast('QR creado exitosamente');
                     closeCreateModal();
                     loadUserQRs();
@@ -753,7 +750,8 @@
                     showToast(data.error || 'Error al crear QR');
                 }
             } catch (error) {
-                showToast('Error de conexión');
+                console.error('Error:', error);
+                showToast('Error de conexión al guardar');
             } finally {
                 spinner.classList.add('hidden');
                 icon.classList.remove('hidden');
@@ -770,13 +768,14 @@
                 
                 const data = await response.json();
                 
-                if (response.ok) {
+                if (response.ok && data.success) {
                     userQRs = data.links || [];
                     renderQRsList();
                 } else {
                     listContainer.innerHTML = '<div class="p-8 text-center text-gray-500">Error al cargar QRs</div>';
                 }
             } catch (error) {
+                console.error('Error cargando QRs:', error);
                 // Demo data if API not available
                 userQRs = [
                     { slug: 'abc123', target: 'https://ejemplo.com', scans: 45, type: 'url', createdAt: Date.now() },
@@ -848,12 +847,13 @@
                 
                 const data = await response.json();
                 
-                if (response.ok) {
+                if (response.ok && data.success) {
                     document.getElementById('stat-total-qrs').textContent = data.totalQRs || 0;
                     document.getElementById('stat-total-scans').textContent = data.totalScans || 0;
                     document.getElementById('stat-top-qr').textContent = data.topQR || '-';
                 }
             } catch (error) {
+                console.error('Error cargando stats:', error);
                 // Calculate from local data
                 document.getElementById('stat-total-qrs').textContent = userQRs.length;
                 document.getElementById('stat-total-scans').textContent = userQRs.reduce((sum, qr) => sum + (qr.scans || 0), 0);
@@ -885,14 +885,17 @@
                     body: JSON.stringify({ slug, target: newTarget })
                 });
                 
-                if (response.ok) {
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
                     showToast('Destino actualizado exitosamente');
                     closeEditModal();
                     loadUserQRs();
                 } else {
-                    showToast('Error al actualizar');
+                    showToast(data.error || 'Error al actualizar');
                 }
             } catch (error) {
+                console.error('Error:', error);
                 showToast('Error de conexión');
             }
         }
@@ -933,7 +936,6 @@
             
             document.getElementById('details-modal').classList.remove('hidden');
             
-            // Generate preview QR
             setTimeout(() => {
                 new QRCode(document.getElementById('detail-qr-preview'), {
                     text: `${API_BASE_URL}/${qr.slug}`,
@@ -950,9 +952,27 @@
         async function deleteQR(slug) {
             if (!confirm('¿Estás seguro de eliminar este QR? Esta acción no se puede deshacer.')) return;
             
-            // API call to delete would go here
-            showToast('QR eliminado');
-            loadUserQRs();
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/delete-link`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentUser.token}`
+                    },
+                    body: JSON.stringify({ slug })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    showToast('QR eliminado');
+                    loadUserQRs();
+                } else {
+                    showToast(data.error || 'Error al eliminar');
+                }
+            } catch (error) {
+                showToast('Error de conexión');
+            }
         }
 
         // Utilities
