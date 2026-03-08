@@ -27,7 +27,7 @@
         .stat-card { transition: transform 0.2s; }
         .stat-card:hover { transform: translateY(-2px); }
         
-        /* Nuevos estilos para QR personalizado */
+        /* Estilos para QR personalizado */
         .qr-frame {
             position: relative;
             display: inline-block;
@@ -50,13 +50,14 @@
             border: 2px solid #667eea;
         }
         
+        /* CORREGIDO: Logo perfectamente centrado */
         .qr-logo-container {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             background: white;
             border-radius: 50%;
             display: flex;
@@ -64,7 +65,7 @@
             justify-content: center;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             border: 3px solid white;
-            z-index: 10;
+            z-index: 100;
             overflow: hidden;
         }
         
@@ -75,11 +76,11 @@
         }
         
         .qr-logo-container.square {
-            border-radius: 12px;
+            border-radius: 8px;
         }
         
         .qr-logo-container.rounded {
-            border-radius: 16px;
+            border-radius: 12px;
         }
         
         .gradient-text {
@@ -115,6 +116,9 @@
             border: 2px solid #e5e7eb;
             cursor: pointer;
             transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .shape-selector:hover { border-color: #667eea; }
@@ -137,6 +141,81 @@
             outline: none;
             border-color: #667eea;
             border-style: solid;
+        }
+        
+        /* Plantillas predefinidas */
+        .template-card {
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .template-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        
+        .template-card.active {
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+        }
+        
+        /* Gradientes predefinidos */
+        .gradient-iron {
+            background: linear-gradient(135deg, #ff0000 0%, #ff6600 50%, #ffff00 100%);
+        }
+        .gradient-ocean {
+            background: linear-gradient(135deg, #0066ff 0%, #00ccff 50%, #66ffff 100%);
+        }
+        .gradient-forest {
+            background: linear-gradient(135deg, #006600 0%, #00cc66 50%, #66ff99 100%);
+        }
+        .gradient-sunset {
+            background: linear-gradient(135deg, #ff0066 0%, #ff6600 50%, #ffcc00 100%);
+        }
+        .gradient-purple {
+            background: linear-gradient(135deg, #6600cc 0%, #cc00ff 50%, #ff66ff 100%);
+        }
+        .gradient-dark {
+            background: linear-gradient(135deg, #000000 0%, #333333 50%, #666666 100%);
+        }
+        
+        /* Input de archivo mejorado */
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+        
+        .file-input-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .file-input-label:hover {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+        }
+        
+        .file-input-label.has-file {
+            border-color: #10b981;
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
         }
     </style>
 </head>
@@ -177,7 +256,7 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
                 <div class="text-center animate-fade-in">
                     <h1 class="text-4xl md:text-6xl font-bold mb-6">Códigos QR Inteligentes</h1>
-                    <p class="text-xl md:text-2xl mb-8 text-purple-100">Crea, personaliza y edita QR dinámicos. Cambia el destino sin cambiar el código.</p>
+                    <p class="text-xl md:text-2xl mb-8 text-purple-100">Crea, personaliza y edita QR dinámicos con diseños profesionales.</p>
                     <div class="flex justify-center gap-4">
                         <button onclick="showSection('register')" class="bg-white text-purple-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">Comenzar Gratis</button>
                         <button onclick="showDemo()" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-purple-600 transition">Ver Demo</button>
@@ -190,24 +269,24 @@
             <div class="grid md:grid-cols-3 gap-8">
                 <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition stat-card">
                     <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-                        <i class="fas fa-link text-purple-600 text-xl"></i>
+                        <i class="fas fa-palette text-purple-600 text-xl"></i>
                     </div>
-                    <h3 class="text-xl font-semibold mb-2">Enlaces Dinámicos</h3>
-                    <p class="text-gray-600">Cambia el destino de tu QR en cualquier momento sin necesidad de reimprimir.</p>
+                    <h3 class="text-xl font-semibold mb-2">Diseños Profesionales</h3>
+                    <p class="text-gray-600">Plantillas predefinidas, gradientes y efectos visuales impactantes.</p>
                 </div>
                 <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition stat-card">
                     <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                        <i class="fas fa-chart-line text-blue-600 text-xl"></i>
+                        <i class="fas fa-image text-blue-600 text-xl"></i>
                     </div>
-                    <h3 class="text-xl font-semibold mb-2">Estadísticas en Tiempo Real</h3>
-                    <p class="text-gray-600">Monitorea escaneos, ubicación y dispositivos de tus códigos QR.</p>
+                    <h3 class="text-xl font-semibold mb-2">Logo Centrado</h3>
+                    <p class="text-gray-600">Agrega tu logo en el centro del QR con marcos personalizados.</p>
                 </div>
                 <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition stat-card">
                     <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-                        <i class="fas fa-palette text-green-600 text-xl"></i>
+                        <i class="fas fa-download text-green-600 text-xl"></i>
                     </div>
-                    <h3 class="text-xl font-semibold mb-2">Personalización Total</h3>
-                    <p class="text-gray-600">Marcos, colores, logos y diseños únicos para tu marca.</p>
+                    <h3 class="text-xl font-semibold mb-2">Exportación Completa</h3>
+                    <p class="text-gray-600">Descarga el QR completo con marco, nombre y logo listo para usar.</p>
                 </div>
             </div>
         </div>
@@ -350,14 +429,45 @@
         </div>
     </section>
 
-    <!-- Create QR Modal - MEJORADO -->
+    <!-- Create QR Modal - COMPLETAMENTE MEJORADO -->
     <div id="create-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-        <div class="relative top-5 mx-auto p-5 border w-full max-w-5xl shadow-lg rounded-xl bg-white animate-slide-up">
+        <div class="relative top-2 mx-auto p-5 border w-full max-w-6xl shadow-lg rounded-xl bg-white animate-slide-up">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-2xl font-bold text-gray-900">Crear Nuevo QR</h3>
+                <h3 class="text-2xl font-bold text-gray-900">Crear Nuevo QR Profesional</h3>
                 <button onclick="closeCreateModal()" class="text-gray-400 hover:text-gray-600">
                     <i class="fas fa-times text-xl"></i>
                 </button>
+            </div>
+
+            <!-- Plantillas Predefinidas -->
+            <div class="mb-6 bg-gray-50 p-4 rounded-xl">
+                <h4 class="font-semibold text-gray-900 mb-3"><i class="fas fa-magic mr-2 text-purple-600"></i>Plantillas Rápidas</h4>
+                <div class="grid grid-cols-3 md:grid-cols-6 gap-3">
+                    <div class="template-card bg-white p-3 rounded-lg text-center" onclick="applyTemplate('iron')" data-template="iron">
+                        <div class="w-full h-16 gradient-iron rounded-lg mb-2"></div>
+                        <span class="text-xs font-medium">Iron Man</span>
+                    </div>
+                    <div class="template-card bg-white p-3 rounded-lg text-center" onclick="applyTemplate('ocean')" data-template="ocean">
+                        <div class="w-full h-16 gradient-ocean rounded-lg mb-2"></div>
+                        <span class="text-xs font-medium">Océano</span>
+                    </div>
+                    <div class="template-card bg-white p-3 rounded-lg text-center" onclick="applyTemplate('forest')" data-template="forest">
+                        <div class="w-full h-16 gradient-forest rounded-lg mb-2"></div>
+                        <span class="text-xs font-medium">Bosque</span>
+                    </div>
+                    <div class="template-card bg-white p-3 rounded-lg text-center" onclick="applyTemplate('sunset')" data-template="sunset">
+                        <div class="w-full h-16 gradient-sunset rounded-lg mb-2"></div>
+                        <span class="text-xs font-medium">Atardecer</span>
+                    </div>
+                    <div class="template-card bg-white p-3 rounded-lg text-center" onclick="applyTemplate('purple')" data-template="purple">
+                        <div class="w-full h-16 gradient-purple rounded-lg mb-2"></div>
+                        <span class="text-xs font-medium">Púrpura</span>
+                    </div>
+                    <div class="template-card bg-white p-3 rounded-lg text-center" onclick="applyTemplate('clean')" data-template="clean">
+                        <div class="w-full h-16 bg-white border-2 border-gray-300 rounded-lg mb-2"></div>
+                        <span class="text-xs font-medium">Limpio</span>
+                    </div>
+                </div>
             </div>
 
             <!-- QR Type Tabs -->
@@ -376,14 +486,14 @@
                 </button>
             </div>
 
-            <div class="grid lg:grid-cols-2 gap-8">
-                <!-- Left Column: Configuration -->
-                <div class="space-y-6 max-h-[70vh] overflow-y-auto pr-2">
+            <div class="grid lg:grid-cols-5 gap-8">
+                <!-- Left Column: Configuration (3 cols) -->
+                <div class="lg:col-span-3 space-y-6 max-h-[65vh] overflow-y-auto pr-2">
                     
                     <!-- Nombre del QR -->
                     <div class="bg-purple-50 p-4 rounded-xl">
-                        <label class="block text-sm font-medium text-purple-900 mb-2">Nombre del QR (opcional)</label>
-                        <input type="text" id="qr-name" placeholder="Ej: Mi Instagram, Web Oficial..." class="qr-name-input w-full bg-white" oninput="updateQRName()">
+                        <label class="block text-sm font-medium text-purple-900 mb-2">Nombre del QR (aparecerá en la imagen)</label>
+                        <input type="text" id="qr-name" placeholder="Ej: Sígueme en Instagram" class="qr-name-input w-full bg-white" oninput="updateQRName()">
                     </div>
 
                     <!-- URL Input -->
@@ -420,10 +530,18 @@
                         </div>
                     </div>
 
-                    <!-- Colores -->
+                    <!-- Colores y Gradientes -->
                     <div class="border-t pt-4">
-                        <h4 class="font-medium text-gray-900 mb-4">Colores</h4>
-                        <div class="grid grid-cols-2 gap-4">
+                        <h4 class="font-medium text-gray-900 mb-4">Colores y Gradientes</h4>
+                        
+                        <!-- Toggle Gradiente -->
+                        <label class="flex items-center gap-2 mb-4 cursor-pointer">
+                            <input type="checkbox" id="use-gradient" onchange="toggleGradient()">
+                            <span class="text-sm font-medium text-gray-700">Usar gradiente en el QR</span>
+                        </label>
+                        
+                        <!-- Colores normales -->
+                        <div id="normal-colors" class="grid grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Color del QR</label>
                                 <div class="flex items-center gap-2">
@@ -439,18 +557,59 @@
                                 </div>
                             </div>
                         </div>
+                        
+                        <!-- Gradientes (oculto por defecto) -->
+                        <div id="gradient-colors" class="hidden space-y-3">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Color inicial del gradiente</label>
+                                <div class="flex items-center gap-2">
+                                    <input type="color" id="gradient-start" value="#667eea" onchange="updateQRPreview()">
+                                    <span class="text-sm text-gray-600">Inicio</span>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Color final del gradiente</label>
+                                <div class="flex items-center gap-2">
+                                    <input type="color" id="gradient-end" value="#764ba2" onchange="updateQRPreview()">
+                                    <span class="text-sm text-gray-600">Fin</span>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Dirección</label>
+                                <select id="gradient-direction" onchange="updateQRPreview()" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                                    <option value="135deg">Diagonal ↘</option>
+                                    <option value="to right">Horizontal →</option>
+                                    <option value="to bottom">Vertical ↓</option>
+                                    <option value="45deg">Diagonal ↗</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Logo -->
+                    <!-- Logo - CORREGIDO -->
                     <div class="border-t pt-4">
                         <h4 class="font-medium text-gray-900 mb-4">Logo Central</h4>
-                        <input type="file" id="qr-logo" accept="image/*" onchange="handleLogoUpload(event)" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100 mb-4">
+                        
+                        <!-- Input de archivo mejorado -->
+                        <div class="file-input-wrapper mb-4">
+                            <input type="file" id="qr-logo" accept="image/*" onchange="handleLogoUpload(event)">
+                            <label for="qr-logo" class="file-input-label" id="file-label">
+                                <i class="fas fa-cloud-upload-alt text-lg"></i>
+                                <span>Seleccionar imagen del logo</span>
+                            </label>
+                        </div>
                         
                         <label class="block text-sm font-medium text-gray-700 mb-2">Forma del logo</label>
                         <div class="flex gap-3 mb-4">
-                            <div class="shape-selector rounded-full active" onclick="setLogoShape('circle')" title="Circular"></div>
-                            <div class="shape-selector rounded-lg" onclick="setLogoShape('rounded')" title="Redondeado"></div>
-                            <div class="shape-selector" onclick="setLogoShape('square')" title="Cuadrado" style="border-radius: 4px;"></div>
+                            <div class="shape-selector rounded-full active" onclick="setLogoShape('circle')" title="Circular">
+                                <div class="w-6 h-6 rounded-full bg-gray-400"></div>
+                            </div>
+                            <div class="shape-selector rounded-lg" onclick="setLogoShape('rounded')" title="Redondeado">
+                                <div class="w-6 h-6 rounded bg-gray-400"></div>
+                            </div>
+                            <div class="shape-selector" onclick="setLogoShape('square')" title="Cuadrado" style="border-radius: 4px;">
+                                <div class="w-6 h-6 bg-gray-400"></div>
+                            </div>
                         </div>
                         
                         <label class="flex items-center gap-2 cursor-pointer">
@@ -490,42 +649,56 @@
                         </div>
                     </div>
 
-                    <button onclick="saveQR()" class="w-full gradient-bg text-white py-3 rounded-lg font-semibold hover:opacity-90 transition flex items-center justify-center gap-2">
-                        <span id="save-spinner" class="hidden loading-spinner"></span>
-                        <i class="fas fa-save" id="save-icon"></i>
-                        Guardar QR
-                    </button>
+                    <!-- Botones de acción -->
+                    <div class="grid grid-cols-2 gap-4 border-t pt-4">
+                        <button onclick="saveQR()" class="gradient-bg text-white py-3 rounded-lg font-semibold hover:opacity-90 transition flex items-center justify-center gap-2">
+                            <span id="save-spinner" class="hidden loading-spinner"></span>
+                            <i class="fas fa-save" id="save-icon"></i>
+                            Guardar en Cuenta
+                        </button>
+                        <button onclick="downloadFullQR()" class="bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition flex items-center justify-center gap-2">
+                            <i class="fas fa-download"></i>
+                            Descargar Imagen Completa
+                        </button>
+                    </div>
                 </div>
 
-                <!-- Right Column: Preview -->
-                <div class="bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl p-8 flex flex-col items-center justify-center pattern-grid">
-                    <h4 class="font-medium text-gray-900 mb-6">Vista Previa</h4>
+                <!-- Right Column: Preview (2 cols) -->
+                <div class="lg:col-span-2 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl p-6 flex flex-col items-center justify-center pattern-grid sticky top-4">
+                    <h4 class="font-medium text-gray-900 mb-4">Vista Previa Final</h4>
                     
-                    <!-- Nombre del QR -->
-                    <div id="qr-display-name" class="text-lg font-bold text-gray-800 mb-4 hidden"></div>
-                    
-                    <!-- Contenedor del QR con marco -->
-                    <div id="qr-frame-container" class="qr-frame">
-                        <div id="qrcode"></div>
-                        <div id="qr-logo" class="qr-logo-container hidden">
-                            <img id="qr-logo-img" src="" alt="Logo">
+                    <!-- Contenedor completo para descarga -->
+                    <div id="full-qr-container" class="bg-white p-6 rounded-2xl shadow-2xl">
+                        <!-- Nombre del QR -->
+                        <div id="qr-display-name" class="text-center text-lg font-bold text-gray-800 mb-4 hidden"></div>
+                        
+                        <!-- Marco y QR -->
+                        <div id="qr-frame-container" class="qr-frame mx-auto">
+                            <div id="qrcode"></div>
+                            <!-- Logo CORREGIDO: Posicionamiento absoluto perfecto -->
+                            <div id="qr-logo" class="qr-logo-container hidden">
+                                <img id="qr-logo-img" src="" alt="Logo">
+                            </div>
+                        </div>
+                        
+                        <!-- Footer -->
+                        <div class="mt-4 text-center">
+                            <p class="text-xs text-gray-400">Scan me</p>
+                            <p class="text-xs text-gray-300 mt-1">powered by YouQR</p>
                         </div>
                     </div>
                     
-                    <div class="mt-6 flex gap-3">
-                        <button onclick="downloadQR('png')" class="px-4 py-2 bg-white text-gray-700 rounded-lg hover:bg-gray-50 transition text-sm shadow-md">
-                            <i class="fas fa-download mr-2"></i>PNG
+                    <div class="mt-6 flex gap-2">
+                        <button onclick="downloadQR('png')" class="px-3 py-2 bg-white text-gray-700 rounded-lg hover:bg-gray-50 transition text-xs shadow">
+                            <i class="fas fa-download mr-1"></i>Solo QR
                         </button>
-                        <button onclick="downloadQR('svg')" class="px-4 py-2 bg-white text-gray-700 rounded-lg hover:bg-gray-50 transition text-sm shadow-md">
-                            <i class="fas fa-vector-square mr-2"></i>SVG
-                        </button>
-                        <button onclick="downloadQR('pdf')" class="px-4 py-2 bg-white text-gray-700 rounded-lg hover:bg-gray-50 transition text-sm shadow-md">
-                            <i class="fas fa-file-pdf mr-2"></i>PDF
+                        <button onclick="downloadFullQR()" class="px-3 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition text-xs shadow">
+                            <i class="fas fa-image mr-1"></i>Completo
                         </button>
                     </div>
                     
-                    <p class="text-xs text-gray-500 mt-4 text-center">
-                        Escanea para probar • Resolución: 1000x1000px
+                    <p class="text-xs text-gray-500 mt-4 text-center max-w-xs">
+                        La descarga "Completa" incluye: marco, nombre, QR y logo listo para publicar
                     </p>
                 </div>
             </div>
@@ -590,6 +763,7 @@
         let currentLogoShape = 'circle';
         let currentFrame = 'none';
         let userQRs = [];
+        let isGradient = false;
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
@@ -730,6 +904,95 @@
             showToast('Sesión cerrada');
         }
 
+        // PLANTILLAS PREDEFINIDAS
+        function applyTemplate(template) {
+            // Marcar activa
+            document.querySelectorAll('.template-card').forEach(el => el.classList.remove('active'));
+            document.querySelector(`[data-template="${template}"]`).classList.add('active');
+            
+            const templates = {
+                iron: {
+                    color: '#ff0000',
+                    bgColor: '#000000',
+                    frame: 'neon',
+                    gradient: true,
+                    gradientStart: '#ff0000',
+                    gradientEnd: '#ff6600'
+                },
+                ocean: {
+                    color: '#0066ff',
+                    bgColor: '#ffffff',
+                    frame: 'glow',
+                    gradient: true,
+                    gradientStart: '#0066ff',
+                    gradientEnd: '#00ccff'
+                },
+                forest: {
+                    color: '#006600',
+                    bgColor: '#f0fdf4',
+                    frame: 'rounded',
+                    gradient: true,
+                    gradientStart: '#006600',
+                    gradientEnd: '#00cc66'
+                },
+                sunset: {
+                    color: '#ff0066',
+                    bgColor: '#fff7ed',
+                    frame: 'glow',
+                    gradient: true,
+                    gradientStart: '#ff0066',
+                    gradientEnd: '#ffcc00'
+                },
+                purple: {
+                    color: '#6600cc',
+                    bgColor: '#faf5ff',
+                    frame: 'neon',
+                    gradient: true,
+                    gradientStart: '#6600cc',
+                    gradientEnd: '#cc00ff'
+                },
+                clean: {
+                    color: '#000000',
+                    bgColor: '#ffffff',
+                    frame: 'none',
+                    gradient: false
+                }
+            };
+            
+            const t = templates[template];
+            
+            // Aplicar configuración
+            document.getElementById('qr-color').value = t.color;
+            document.getElementById('qr-bg-color').value = t.bgColor;
+            document.getElementById('color-value').textContent = t.color;
+            document.getElementById('bg-color-value').textContent = t.bgColor;
+            
+            // Gradiente
+            isGradient = t.gradient;
+            document.getElementById('use-gradient').checked = t.gradient;
+            document.getElementById('gradient-colors').classList.toggle('hidden', !t.gradient);
+            document.getElementById('normal-colors').classList.toggle('hidden', t.gradient);
+            
+            if (t.gradient) {
+                document.getElementById('gradient-start').value = t.gradientStart;
+                document.getElementById('gradient-end').value = t.gradientEnd;
+            }
+            
+            // Frame
+            setFrame(t.frame);
+            
+            updateQRPreview();
+            showToast(`Plantilla "${template}" aplicada`);
+        }
+
+        // Toggle gradiente
+        function toggleGradient() {
+            isGradient = document.getElementById('use-gradient').checked;
+            document.getElementById('gradient-colors').classList.toggle('hidden', !isGradient);
+            document.getElementById('normal-colors').classList.toggle('hidden', isGradient);
+            updateQRPreview();
+        }
+
         // QR Management
         function openCreateModal() {
             document.getElementById('create-modal').classList.remove('hidden');
@@ -752,13 +1015,25 @@
             document.getElementById('color-value').textContent = '#000000';
             document.getElementById('bg-color-value').textContent = '#ffffff';
             document.getElementById('qr-display-name').classList.add('hidden');
+            document.getElementById('file-label').classList.remove('has-file');
+            document.getElementById('file-label').innerHTML = '<i class="fas fa-cloud-upload-alt text-lg"></i><span>Seleccionar imagen del logo</span>';
+            
+            // Reset gradiente
+            isGradient = false;
+            document.getElementById('use-gradient').checked = false;
+            document.getElementById('gradient-colors').classList.add('hidden');
+            document.getElementById('normal-colors').remove('hidden');
+            
             currentLogo = null;
             currentFrame = 'none';
             currentLogoShape = 'circle';
             document.getElementById('qr-logo').classList.add('hidden');
             document.getElementById('qr-logo-img').src = '';
             
-            // Reset frame selection
+            // Reset template
+            document.querySelectorAll('.template-card').forEach(el => el.classList.remove('active'));
+            
+            // Reset frame
             document.querySelectorAll('.frame-selector').forEach(el => el.classList.remove('active'));
             document.querySelector('[data-frame="none"]').classList.add('active');
             
@@ -805,18 +1080,21 @@
 
         function setLogoShape(shape) {
             currentLogoShape = shape;
-            document.querySelectorAll('.shape-selector').forEach(el => el.classList.remove('active'));
-            event.target.classList.add('active');
             
+            // Actualizar UI
+            document.querySelectorAll('.shape-selector').forEach(el => el.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            // Aplicar clase al contenedor del logo
             const logoContainer = document.getElementById('qr-logo');
             logoContainer.className = 'qr-logo-container';
             
             if (shape === 'circle') {
-                logoContainer.classList.add('rounded-full');
+                logoContainer.style.borderRadius = '50%';
             } else if (shape === 'rounded') {
-                logoContainer.classList.add('rounded');
+                logoContainer.style.borderRadius = '12px';
             } else if (shape === 'square') {
-                logoContainer.classList.add('square');
+                logoContainer.style.borderRadius = '4px';
             }
         }
 
@@ -826,7 +1104,7 @@
             document.querySelector(`[data-frame="${frame}"]`).classList.add('active');
             
             const container = document.getElementById('qr-frame-container');
-            container.className = 'qr-frame';
+            container.className = 'qr-frame mx-auto';
             
             if (frame !== 'none') {
                 container.classList.add(frame);
@@ -839,8 +1117,8 @@
             
             qrCodeObj = new QRCode(container, {
                 text: 'https://youqr.app',
-                width: 250,
-                height: 250,
+                width: 200,
+                height: 200,
                 colorDark: '#000000',
                 colorLight: '#ffffff',
                 correctLevel: QRCode.CorrectLevel.H
@@ -877,16 +1155,24 @@
             const container = document.getElementById('qrcode');
             container.innerHTML = '';
             
+            // Si es gradiente, usar color oscuro para el QR
+            const qrColor = isGradient ? '#000000' : color;
+            
             qrCodeObj = new QRCode(container, {
                 text: content,
-                width: 250,
-                height: 250,
-                colorDark: color,
+                width: 200,
+                height: 200,
+                colorDark: qrColor,
                 colorLight: bgColor,
                 correctLevel: QRCode.CorrectLevel.H
             });
             
-            // Apply logo if exists
+            // Aplicar gradiente si está activo
+            if (isGradient) {
+                setTimeout(() => applyGradientToQR(), 50);
+            }
+            
+            // Mostrar logo si existe
             if (currentLogo) {
                 setTimeout(() => {
                     const logoContainer = document.getElementById('qr-logo');
@@ -897,12 +1183,70 @@
             }
         }
 
+        function applyGradientToQR() {
+            const canvas = document.querySelector('#qrcode canvas');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            // Crear gradiente
+            const gradientStart = document.getElementById('gradient-start').value;
+            const gradientEnd = document.getElementById('gradient-end').value;
+            const direction = document.getElementById('gradient-direction').value;
+            
+            let gradient;
+            if (direction === 'to right') {
+                gradient = ctx.createLinearGradient(0, 0, width, 0);
+            } else if (direction === 'to bottom') {
+                gradient = ctx.createLinearGradient(0, 0, 0, height);
+            } else if (direction === '45deg') {
+                gradient = ctx.createLinearGradient(0, 0, width, height);
+            } else {
+                gradient = ctx.createLinearGradient(0, 0, width, height);
+            }
+            
+            gradient.addColorStop(0, gradientStart);
+            gradient.addColorStop(1, gradientEnd);
+            
+            // Aplicar gradiente solo a los píxeles oscuros (el QR)
+            const imageData = ctx.getImageData(0, 0, width, height);
+            const data = imageData.data;
+            
+            // Crear canvas temporal para el gradiente
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = width;
+            tempCanvas.height = height;
+            const tempCtx = tempCanvas.getContext('2d');
+            tempCtx.fillStyle = gradient;
+            tempCtx.fillRect(0, 0, width, height);
+            const gradientData = tempCtx.getImageData(0, 0, width, height).data;
+            
+            // Combinar: donde el QR es negro, aplicar gradiente
+            for (let i = 0; i < data.length; i += 4) {
+                if (data[i] < 128) { // Si es oscuro (parte del QR)
+                    data[i] = gradientData[i];
+                    data[i + 1] = gradientData[i + 1];
+                    data[i + 2] = gradientData[i + 2];
+                }
+            }
+            
+            ctx.putImageData(imageData, 0, 0);
+        }
+
         function handleLogoUpload(event) {
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     currentLogo = e.target.result;
+                    
+                    // Actualizar label
+                    const label = document.getElementById('file-label');
+                    label.classList.add('has-file');
+                    label.innerHTML = `<i class="fas fa-check-circle text-lg text-green-600"></i><span>${file.name}</span>`;
+                    
                     updateQRPreview();
                 };
                 reader.readAsDataURL(file);
@@ -967,18 +1311,20 @@
                         bgColor: document.getElementById('qr-bg-color').value,
                         name: document.getElementById('qr-name').value,
                         frame: currentFrame,
-                        logoShape: currentLogoShape
+                        logoShape: currentLogoShape,
+                        isGradient: isGradient,
+                        gradientStart: isGradient ? document.getElementById('gradient-start').value : null,
+                        gradientEnd: isGradient ? document.getElementById('gradient-end').value : null
                     })
                 });
                 
                 const data = await response.json();
                 
                 if (response.ok && data.success) {
-                    showToast('QR creado exitosamente');
-                    closeCreateModal();
+                    showToast('QR guardado en tu cuenta');
                     loadUserQRs();
                 } else {
-                    showToast(data.error || 'Error al crear QR');
+                    showToast(data.error || 'Error al guardar QR');
                 }
             } catch (error) {
                 showToast('Error de conexión al guardar');
@@ -986,6 +1332,170 @@
                 spinner.classList.add('hidden');
                 icon.classList.remove('hidden');
             }
+        }
+
+        // DESCARGA COMPLETA CON MARCO Y NOMBRE
+        async function downloadFullQR() {
+            const container = document.getElementById('full-qr-container');
+            const name = document.getElementById('qr-name').value || 'YouQR';
+            
+            showToast('Generando imagen completa...');
+            
+            try {
+                // Usar html2canvas o método alternativo
+                // Por ahora, usamos canvas manual
+                
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const scale = 2; // Alta resolución
+                
+                // Dimensiones
+                const width = 600;
+                const height = 700;
+                canvas.width = width * scale;
+                canvas.height = height * scale;
+                ctx.scale(scale, scale);
+                
+                // Fondo blanco
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, width, height);
+                
+                // Sombra del contenedor
+                ctx.shadowColor = 'rgba(0,0,0,0.1)';
+                ctx.shadowBlur = 20;
+                ctx.shadowOffsetY = 10;
+                
+                // Marco exterior
+                ctx.fillStyle = '#ffffff';
+                ctx.strokeStyle = '#e5e7eb';
+                ctx.lineWidth = 1;
+                roundRect(ctx, 30, 30, width - 60, height - 60, 20);
+                ctx.fill();
+                ctx.stroke();
+                
+                ctx.shadowColor = 'transparent';
+                
+                // Nombre
+                if (name) {
+                    ctx.font = 'bold 32px Inter, sans-serif';
+                    ctx.fillStyle = '#1f2937';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(name, width / 2, 100);
+                }
+                
+                // Área del QR
+                const qrSize = 400;
+                const qrX = (width - qrSize) / 2;
+                const qrY = name ? 140 : 120;
+                
+                // Marco del QR según selección
+                ctx.save();
+                if (currentFrame === 'glow') {
+                    ctx.shadowColor = 'rgba(102, 126, 234, 0.5)';
+                    ctx.shadowBlur = 30;
+                } else if (currentFrame === 'neon') {
+                    ctx.shadowColor = '#667eea';
+                    ctx.shadowBlur = 20;
+                }
+                
+                ctx.fillStyle = '#ffffff';
+                roundRect(ctx, qrX - 20, qrY - 20, qrSize + 40, qrSize + 40, currentFrame === 'circle' ? qrSize / 2 + 20 : 20);
+                ctx.fill();
+                ctx.restore();
+                
+                // Dibujar QR
+                const qrCanvas = document.querySelector('#qrcode canvas');
+                if (qrCanvas) {
+                    ctx.drawImage(qrCanvas, qrX, qrY, qrSize, qrSize);
+                    
+                    // Logo centrado
+                    if (currentLogo) {
+                        const logoSize = 80;
+                        const logoX = qrX + (qrSize - logoSize) / 2;
+                        const logoY = qrY + (qrSize - logoSize) / 2;
+                        
+                        // Fondo del logo
+                        ctx.fillStyle = document.getElementById('logo-bg-transparent').checked ? 'rgba(255,255,255,0.9)' : '#ffffff';
+                        ctx.beginPath();
+                        if (currentLogoShape === 'circle') {
+                            ctx.arc(qrX + qrSize/2, qrY + qrSize/2, logoSize/2 + 5, 0, 2 * Math.PI);
+                        } else if (currentLogoShape === 'rounded') {
+                            roundRect(ctx, logoX - 5, logoY - 5, logoSize + 10, logoSize + 10, 15);
+                        } else {
+                            ctx.rect(logoX - 5, logoY - 5, logoSize + 10, logoSize + 10);
+                        }
+                        ctx.fill();
+                        
+                        // Logo
+                        const logoImg = new Image();
+                        logoImg.onload = function() {
+                            ctx.save();
+                            ctx.beginPath();
+                            if (currentLogoShape === 'circle') {
+                                ctx.arc(qrX + qrSize/2, qrY + qrSize/2, logoSize/2, 0, 2 * Math.PI);
+                            } else if (currentLogoShape === 'rounded') {
+                                roundRect(ctx, logoX, logoY, logoSize, logoSize, 12);
+                            } else {
+                                ctx.rect(logoX, logoY, logoSize, logoSize);
+                            }
+                            ctx.clip();
+                            ctx.drawImage(logoImg, logoX, logoY, logoSize, logoSize);
+                            ctx.restore();
+                            
+                            // Footer
+                            ctx.font = '16px Inter, sans-serif';
+                            ctx.fillStyle = '#9ca3af';
+                            ctx.textAlign = 'center';
+                            ctx.fillText('Scan me', width / 2, height - 80);
+                            ctx.font = '14px Inter, sans-serif';
+                            ctx.fillText('powered by YouQR', width / 2, height - 60);
+                            
+                            // Descargar
+                            const link = document.createElement('a');
+                            link.download = `youqr-${name.replace(/\s+/g, '-').toLowerCase()}-${Date.now()}.png`;
+                            link.href = canvas.toDataURL('image/png');
+                            link.click();
+                            
+                            showToast('¡Imagen descargada con éxito!');
+                        };
+                        logoImg.src = currentLogo;
+                    } else {
+                        // Footer sin logo
+                        ctx.font = '16px Inter, sans-serif';
+                        ctx.fillStyle = '#9ca3af';
+                        ctx.textAlign = 'center';
+                        ctx.fillText('Scan me', width / 2, height - 80);
+                        ctx.font = '14px Inter, sans-serif';
+                        ctx.fillText('powered by YouQR', width / 2, height - 60);
+                        
+                        // Descargar
+                        const link = document.createElement('a');
+                        link.download = `youqr-${name.replace(/\s+/g, '-').toLowerCase()}-${Date.now()}.png`;
+                        link.href = canvas.toDataURL('image/png');
+                        link.click();
+                        
+                        showToast('¡Imagen descargada con éxito!');
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('Error al generar imagen');
+            }
+        }
+        
+        // Helper para rectángulos redondeados
+        function roundRect(ctx, x, y, width, height, radius) {
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
         }
 
         async function loadUserQRs() {
@@ -1005,10 +1515,7 @@
                     listContainer.innerHTML = '<div class="p-8 text-center text-gray-500">Error al cargar QRs</div>';
                 }
             } catch (error) {
-                userQRs = [
-                    { slug: 'abc123', target: 'https://ejemplo.com', scans: 45, type: 'url', createdAt: Date.now() },
-                    { slug: 'def456', target: 'https://spotify.com/track/123', scans: 12, type: 'spotify', createdAt: Date.now() - 86400000 }
-                ];
+                userQRs = [];
                 renderQRsList();
             }
         }
@@ -1086,7 +1593,6 @@
             }
         }
 
-        // Edit Modal
         function openEditModal(slug, target) {
             document.getElementById('edit-slug').value = slug;
             document.getElementById('edit-target').value = target;
@@ -1125,7 +1631,6 @@
             }
         }
 
-        // Details Modal
         function showQRDetails(slug) {
             const qr = userQRs.find(q => q.slug === slug);
             if (!qr) return;
@@ -1151,23 +1656,9 @@
                         </button>
                     </div>
                 </div>
-                <div class="mt-4">
-                    <p class="text-sm text-gray-600 mb-2">Vista previa del QR:</p>
-                    <div class="flex justify-center">
-                        <div id="detail-qr-preview" class="bg-white p-4 rounded-lg shadow"></div>
-                    </div>
-                </div>
             `;
             
             document.getElementById('details-modal').classList.remove('hidden');
-            
-            setTimeout(() => {
-                new QRCode(document.getElementById('detail-qr-preview'), {
-                    text: `${API_BASE_URL}/${qr.slug}`,
-                    width: 150,
-                    height: 150
-                });
-            }, 100);
         }
 
         function closeDetailsModal() {
@@ -1200,66 +1691,14 @@
             }
         }
 
-        // Utilities
         function downloadQR(format) {
             const canvas = document.querySelector('#qrcode canvas');
             if (!canvas) return;
             
-            if (format === 'png') {
-                // Crear canvas de alta resolución
-                const highResCanvas = document.createElement('canvas');
-                const ctx = highResCanvas.getContext('2d');
-                highResCanvas.width = 1000;
-                highResCanvas.height = 1000;
-                
-                // Dibujar fondo
-                const bgColor = document.getElementById('qr-bg-color').value;
-                ctx.fillStyle = bgColor;
-                ctx.fillRect(0, 0, 1000, 1000);
-                
-                // Dibujar QR escalado
-                ctx.drawImage(canvas, 0, 0, 1000, 1000);
-                
-                // Agregar logo si existe
-                if (currentLogo) {
-                    const logoSize = 200;
-                    const x = (1000 - logoSize) / 2;
-                    const y = (1000 - logoSize) / 2;
-                    
-                    const logoImg = new Image();
-                    logoImg.onload = function() {
-                        // Fondo blanco para el logo
-                        ctx.fillStyle = 'white';
-                        ctx.beginPath();
-                        ctx.arc(500, 500, logoSize/2 + 10, 0, 2 * Math.PI);
-                        ctx.fill();
-                        
-                        // Logo
-                        ctx.save();
-                        ctx.beginPath();
-                        ctx.arc(500, 500, logoSize/2, 0, 2 * Math.PI);
-                        ctx.clip();
-                        ctx.drawImage(logoImg, x, y, logoSize, logoSize);
-                        ctx.restore();
-                        
-                        // Descargar
-                        const link = document.createElement('a');
-                        link.download = `youqr-${Date.now()}.png`;
-                        link.href = highResCanvas.toDataURL('image/png');
-                        link.click();
-                    };
-                    logoImg.src = currentLogo;
-                } else {
-                    const link = document.createElement('a');
-                    link.download = `youqr-${Date.now()}.png`;
-                    link.href = highResCanvas.toDataURL('image/png');
-                    link.click();
-                }
-            } else if (format === 'svg') {
-                showToast('Descarga SVG disponible en versión Pro');
-            } else if (format === 'pdf') {
-                showToast('Descarga PDF disponible en versión Pro');
-            }
+            const link = document.createElement('a');
+            link.download = `youqr-qr-only-${Date.now()}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
         }
 
         function copyToClipboard(text) {
@@ -1282,7 +1721,6 @@
             openCreateModal();
         }
 
-        // Close modals on outside click
         window.onclick = function(event) {
             if (event.target.id === 'create-modal') closeCreateModal();
             if (event.target.id === 'edit-modal') closeEditModal();
