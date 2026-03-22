@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YouQR - Generador de Códigos QR Dinámicos</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/styles.css">
@@ -46,98 +46,24 @@
                 </div>
             </div>
         </div>
-
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
             <div class="grid md:grid-cols-3 gap-8">
                 <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition stat-card">
-                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-                        <i class="fas fa-palette text-purple-600 text-xl"></i>
-                    </div>
+                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4"><i class="fas fa-palette text-purple-600 text-xl"></i></div>
                     <h3 class="text-xl font-semibold mb-2">Diseños Profesionales</h3>
-                    <p class="text-gray-600">Plantillas predefinidas, gradientes y efectos visuales impactantes.</p>
+                    <p class="text-gray-600">Plantillas predefinidas, gradientes reales y efectos visuales impactantes.</p>
                 </div>
                 <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition stat-card">
-                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                        <i class="fas fa-image text-blue-600 text-xl"></i>
-                    </div>
+                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4"><i class="fas fa-image text-blue-600 text-xl"></i></div>
                     <h3 class="text-xl font-semibold mb-2">Logo Centrado</h3>
                     <p class="text-gray-600">Agrega tu logo en el centro del QR con marcos personalizados.</p>
                 </div>
                 <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition stat-card">
-                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-                        <i class="fas fa-download text-green-600 text-xl"></i>
-                    </div>
+                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4"><i class="fas fa-download text-green-600 text-xl"></i></div>
                     <h3 class="text-xl font-semibold mb-2">Exportación Completa</h3>
-                    <p class="text-gray-600">Descarga el QR completo con marco, nombre y logo listo para usar.</p>
+                    <p class="text-gray-600">Descarga en alta calidad SVG, PNG o JPG, listo para imprimir.</p>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <section id="login" class="hidden min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-2xl shadow-lg animate-slide-up">
-            <div>
-                <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Inicia sesión en tu cuenta</h2>
-                <p class="mt-2 text-center text-sm text-gray-600">
-                    ¿No tienes cuenta? 
-                    <button onclick="showSection('register')" class="font-medium text-purple-600 hover:text-purple-500">Regístrate gratis</button>
-                </p>
-            </div>
-            <form class="mt-8 space-y-6" onsubmit="handleLogin(event)">
-                <div class="rounded-md shadow-sm -space-y-px">
-                    <div class="mb-4">
-                        <label for="login-email" class="block text-sm font-medium text-gray-700 mb-1">Correo electrónico</label>
-                        <input id="login-email" name="email" type="email" required class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm" placeholder="tu@email.com">
-                    </div>
-                    <div>
-                        <label for="login-password" class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
-                        <input id="login-password" name="password" type="password" required class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm" placeholder="••••••••">
-                    </div>
-                </div>
-                <div>
-                    <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-white gradient-bg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
-                        <span id="login-spinner" class="hidden loading-spinner mr-2"></span>
-                        Iniciar Sesión
-                    </button>
-                </div>
-                <div id="login-error" class="text-red-600 text-sm text-center hidden"></div>
-            </form>
-        </div>
-    </section>
-
-    <section id="register" class="hidden min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-2xl shadow-lg animate-slide-up">
-            <div>
-                <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Crea tu cuenta gratuita</h2>
-                <p class="mt-2 text-center text-sm text-gray-600">
-                    ¿Ya tienes cuenta? 
-                    <button onclick="showSection('login')" class="font-medium text-purple-600 hover:text-purple-500">Inicia sesión</button>
-                </p>
-            </div>
-            <form class="mt-8 space-y-6" onsubmit="handleRegister(event)">
-                <div class="rounded-md shadow-sm -space-y-px">
-                    <div class="mb-4">
-                        <label for="register-email" class="block text-sm font-medium text-gray-700 mb-1">Correo electrónico</label>
-                        <input id="register-email" name="email" type="email" required class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm" placeholder="tu@email.com">
-                    </div>
-                    <div class="mb-4">
-                        <label for="register-password" class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
-                        <input id="register-password" name="password" type="password" required minlength="6" class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm" placeholder="Mínimo 6 caracteres">
-                    </div>
-                    <div>
-                        <label for="register-password-confirm" class="block text-sm font-medium text-gray-700 mb-1">Confirmar contraseña</label>
-                        <input id="register-password-confirm" name="password-confirm" type="password" required class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm" placeholder="••••••••">
-                    </div>
-                </div>
-                <div>
-                    <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-white gradient-bg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
-                        <span id="register-spinner" class="hidden loading-spinner mr-2"></span>
-                        Crear Cuenta
-                    </button>
-                </div>
-                <div id="register-error" class="text-red-600 text-sm text-center hidden"></div>
-                <div id="register-success" class="text-green-600 text-sm text-center hidden"></div>
-            </form>
         </div>
     </section>
 
@@ -147,59 +73,15 @@
                 <h1 class="text-3xl font-bold text-gray-900">Panel de Control</h1>
                 <p class="text-gray-600 mt-1">Gestiona tus códigos QR dinámicos</p>
             </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div class="bg-white rounded-xl shadow p-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm font-medium text-gray-600">Total de QRs</p>
-                            <p class="text-2xl font-bold text-gray-900" id="stat-total-qrs">0</p>
-                        </div>
-                        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-qrcode text-purple-600"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-white rounded-xl shadow p-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm font-medium text-gray-600">Escaneos Totales</p>
-                            <p class="text-2xl font-bold text-gray-900" id="stat-total-scans">0</p>
-                        </div>
-                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-eye text-blue-600"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-white rounded-xl shadow p-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm font-medium text-gray-600">QR Más Popular</p>
-                            <p class="text-2xl font-bold text-gray-900" id="stat-top-qr">-</p>
-                        </div>
-                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-trophy text-green-600"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <div class="mb-8">
                 <button onclick="openCreateModal()" class="gradient-bg text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition flex items-center gap-2">
-                    <i class="fas fa-plus"></i>
-                    Crear Nuevo QR
+                    <i class="fas fa-plus"></i> Crear Nuevo QR
                 </button>
             </div>
-
             <div class="bg-white rounded-xl shadow">
-                <div class="px-6 py-4 border-b border-gray-200">
-                    <h2 class="text-lg font-semibold text-gray-900">Mis Códigos QR</h2>
-                </div>
+                <div class="px-6 py-4 border-b border-gray-200"><h2 class="text-lg font-semibold text-gray-900">Mis Códigos QR</h2></div>
                 <div id="qrs-list" class="divide-y divide-gray-200">
-                    <div class="p-8 text-center text-gray-500">
-                        <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
-                        <p>Cargando tus QRs...</p>
-                    </div>
+                    <div class="p-8 text-center text-gray-500"><i class="fas fa-spinner fa-spin text-2xl mb-2"></i><p>Cargando tus QRs...</p></div>
                 </div>
             </div>
         </div>
@@ -208,272 +90,178 @@
     <div id="create-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
         <div class="relative top-2 mx-auto p-5 border w-full max-w-6xl shadow-lg rounded-xl bg-white animate-slide-up">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-2xl font-bold text-gray-900">Crear Nuevo QR Profesional</h3>
-                <button onclick="closeCreateModal()" class="text-gray-400 hover:text-gray-600">
-                    <i class="fas fa-times text-xl"></i>
-                </button>
+                <h3 class="text-2xl font-bold text-gray-900">Configurar Código QR</h3>
+                <button onclick="closeCreateModal()" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times text-xl"></i></button>
             </div>
 
             <div class="mb-6 bg-gray-50 p-4 rounded-xl">
                 <h4 class="font-semibold text-gray-900 mb-3"><i class="fas fa-magic mr-2 text-purple-600"></i>Plantillas Rápidas</h4>
                 <div class="grid grid-cols-3 md:grid-cols-6 gap-3">
-                    <div class="template-card bg-white p-3 rounded-lg text-center" onclick="applyTemplate('iron')" data-template="iron">
-                        <div class="w-full h-16 gradient-iron rounded-lg mb-2"></div>
-                        <span class="text-xs font-medium">Iron Man</span>
+                    <div class="template-card bg-white p-3 rounded-lg text-center" onclick="applyTemplate('techRed')" data-template="techRed">
+                        <div class="w-full h-16 gradient-iron rounded-lg mb-2 shadow-[0_0_10px_rgba(255,0,0,0.5)]"></div>
+                        <span class="text-xs font-medium">Tech Rojo</span>
                     </div>
                     <div class="template-card bg-white p-3 rounded-lg text-center" onclick="applyTemplate('ocean')" data-template="ocean">
-                        <div class="w-full h-16 gradient-ocean rounded-lg mb-2"></div>
-                        <span class="text-xs font-medium">Océano</span>
+                        <div class="w-full h-16 gradient-ocean rounded-lg mb-2"></div><span class="text-xs font-medium">Océano</span>
                     </div>
                     <div class="template-card bg-white p-3 rounded-lg text-center" onclick="applyTemplate('forest')" data-template="forest">
-                        <div class="w-full h-16 gradient-forest rounded-lg mb-2"></div>
-                        <span class="text-xs font-medium">Bosque</span>
+                        <div class="w-full h-16 gradient-forest rounded-lg mb-2"></div><span class="text-xs font-medium">Bosque</span>
                     </div>
                     <div class="template-card bg-white p-3 rounded-lg text-center" onclick="applyTemplate('sunset')" data-template="sunset">
-                        <div class="w-full h-16 gradient-sunset rounded-lg mb-2"></div>
-                        <span class="text-xs font-medium">Atardecer</span>
+                        <div class="w-full h-16 gradient-sunset rounded-lg mb-2"></div><span class="text-xs font-medium">Atardecer</span>
                     </div>
                     <div class="template-card bg-white p-3 rounded-lg text-center" onclick="applyTemplate('purple')" data-template="purple">
-                        <div class="w-full h-16 gradient-purple rounded-lg mb-2"></div>
-                        <span class="text-xs font-medium">Púrpura</span>
+                        <div class="w-full h-16 gradient-purple rounded-lg mb-2"></div><span class="text-xs font-medium">Púrpura</span>
                     </div>
                     <div class="template-card bg-white p-3 rounded-lg text-center" onclick="applyTemplate('clean')" data-template="clean">
-                        <div class="w-full h-16 bg-white border-2 border-gray-300 rounded-lg mb-2"></div>
-                        <span class="text-xs font-medium">Limpio</span>
+                        <div class="w-full h-16 bg-white border-2 border-gray-300 rounded-lg mb-2"></div><span class="text-xs font-medium">Limpio</span>
                     </div>
                 </div>
             </div>
 
             <div class="flex space-x-6 border-b border-gray-200 mb-6 overflow-x-auto whitespace-nowrap">
-                <button onclick="setQRType('url')" class="qr-tab tab-active pb-2 px-1 font-medium text-sm" data-type="url">
-                    <i class="fas fa-link mr-2"></i>URL
-                </button>
-                <button onclick="setQRType('text')" class="qr-tab pb-2 px-1 font-medium text-sm text-gray-500 hover:text-gray-700" data-type="text">
-                    <i class="fas fa-align-left mr-2"></i>Texto
-                </button>
-                <button onclick="setQRType('spotify')" class="qr-tab pb-2 px-1 font-medium text-sm text-gray-500 hover:text-gray-700" data-type="spotify">
-                    <i class="fab fa-spotify mr-2"></i>Spotify
-                </button>
-                <button onclick="setQRType('maps')" class="qr-tab pb-2 px-1 font-medium text-sm text-gray-500 hover:text-gray-700" data-type="maps">
-                    <i class="fas fa-map-marker-alt mr-2"></i>Mapas
-                </button>
-                <button onclick="setQRType('instagram')" class="qr-tab pb-2 px-1 font-medium text-sm text-gray-500 hover:text-gray-700" data-type="instagram">
-                    <i class="fab fa-instagram mr-2"></i>Instagram
-                </button>
-                <button onclick="setQRType('whatsapp')" class="qr-tab pb-2 px-1 font-medium text-sm text-gray-500 hover:text-gray-700" data-type="whatsapp">
-                    <i class="fab fa-whatsapp mr-2"></i>WhatsApp
-                </button>
-                <button onclick="setQRType('vcard')" class="qr-tab pb-2 px-1 font-medium text-sm text-gray-500 hover:text-gray-700" data-type="vcard">
-                    <i class="fas fa-id-card mr-2"></i>vCard
-                </button>
+                <button onclick="setQRType('url')" class="qr-tab tab-active pb-2 px-1 font-medium text-sm" data-type="url"><i class="fas fa-link mr-2"></i>URL</button>
+                <button onclick="setQRType('text')" class="qr-tab pb-2 px-1 font-medium text-sm text-gray-500 hover:text-gray-700" data-type="text"><i class="fas fa-align-left mr-2"></i>Texto</button>
+                <button onclick="setQRType('instagram')" class="qr-tab pb-2 px-1 font-medium text-sm text-gray-500 hover:text-gray-700" data-type="instagram"><i class="fab fa-instagram mr-2"></i>Instagram</button>
+                <button onclick="setQRType('whatsapp')" class="qr-tab pb-2 px-1 font-medium text-sm text-gray-500 hover:text-gray-700" data-type="whatsapp"><i class="fab fa-whatsapp mr-2"></i>WhatsApp</button>
+                <button onclick="setQRType('vcard')" class="qr-tab pb-2 px-1 font-medium text-sm text-gray-500 hover:text-gray-700" data-type="vcard"><i class="fas fa-id-card mr-2"></i>vCard</button>
             </div>
 
             <div class="grid lg:grid-cols-5 gap-8">
                 <div class="lg:col-span-3 space-y-6 max-h-[65vh] overflow-y-auto pr-2">
                     
                     <div class="bg-purple-50 p-4 rounded-xl">
-                        <label class="block text-sm font-medium text-purple-900 mb-2">Nombre del QR (aparecerá en la imagen)</label>
-                        <input type="text" id="qr-name" placeholder="Ej: Sígueme en mis redes" class="qr-name-input w-full bg-white" oninput="updateQRName()">
+                        <label class="block text-sm font-medium text-purple-900 mb-2">Nombre del Proyecto</label>
+                        <input type="text" id="qr-name" placeholder="Ej: Mi primera campaña" class="qr-name-input w-full bg-white" oninput="updateQRName()">
                     </div>
 
                     <div id="input-url" class="space-y-2">
                         <label class="block text-sm font-medium text-gray-700">URL de destino</label>
-                        <input type="url" id="qr-url" placeholder="https://ejemplo.com" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" oninput="updateQRPreview()">
+                        <input type="url" id="qr-url" placeholder="https://ejemplo.com" class="w-full px-3 py-2 border border-gray-300 rounded-lg" oninput="updateQRPreview()">
                     </div>
-
                     <div id="input-text" class="space-y-2 hidden">
                         <label class="block text-sm font-medium text-gray-700">Texto</label>
-                        <textarea id="qr-text" rows="3" placeholder="Escribe tu mensaje aquí..." class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" oninput="updateQRPreview()"></textarea>
+                        <textarea id="qr-text" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg" oninput="updateQRPreview()"></textarea>
                     </div>
-
-                    <div id="input-spotify" class="space-y-2 hidden">
-                        <label class="block text-sm font-medium text-gray-700">URL de Spotify</label>
-                        <input type="url" id="qr-spotify" placeholder="https://open.spotify.com/track/..." class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" oninput="updateQRPreview()">
-                    </div>
-
-                    <div id="input-maps" class="space-y-2 hidden">
-                        <label class="block text-sm font-medium text-gray-700">Ubicación</label>
-                        <input type="text" id="qr-maps-search" placeholder="Buscar lugar..." class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 mb-2">
-                        <button onclick="searchMaps()" class="w-full bg-gray-100 text-gray-700 py-2 rounded-lg hover:bg-gray-200 transition mb-2">
-                            <i class="fas fa-search mr-2"></i>Buscar
-                        </button>
-                        <input type="hidden" id="qr-maps-lat">
-                        <input type="hidden" id="qr-maps-lng">
-                        <div id="maps-preview" class="hidden bg-gray-100 p-3 rounded-lg text-sm text-gray-600">
-                            <i class="fas fa-check-circle text-green-500 mr-2"></i>Ubicación seleccionada
-                        </div>
-                    </div>
-
                     <div id="input-instagram" class="space-y-2 hidden">
                         <label class="block text-sm font-medium text-gray-700">Usuario de Instagram</label>
                         <div class="flex">
-                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">@</span>
-                            <input type="text" id="qr-instagram" placeholder="tu_usuario" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-lg border border-gray-300 focus:ring-purple-500 focus:border-purple-500" oninput="updateQRPreview()">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500">@</span>
+                            <input type="text" id="qr-instagram" class="flex-1 min-w-0 block w-full px-3 py-2 border border-gray-300 rounded-r-lg" oninput="updateQRPreview()">
                         </div>
                     </div>
-
                     <div id="input-whatsapp" class="space-y-2 hidden">
-                        <label class="block text-sm font-medium text-gray-700">Número de Teléfono (con código de país)</label>
-                        <input type="text" id="qr-wa-phone" placeholder="Ej: 5215555555555" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2 focus:ring-purple-500" oninput="updateQRPreview()">
-                        <label class="block text-sm font-medium text-gray-700">Mensaje Predefinido (Opcional)</label>
-                        <input type="text" id="qr-wa-text" placeholder="Hola, me interesa tu producto..." class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-purple-500" oninput="updateQRPreview()">
+                        <input type="text" id="qr-wa-phone" placeholder="Teléfono con código de país" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2" oninput="updateQRPreview()">
+                        <input type="text" id="qr-wa-text" placeholder="Mensaje predeterminado" class="w-full px-3 py-2 border border-gray-300 rounded-lg" oninput="updateQRPreview()">
                     </div>
-
                     <div id="input-vcard" class="space-y-2 hidden">
-                        <input type="text" id="qr-vcard-name" placeholder="Nombre completo" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2 focus:ring-purple-500" oninput="updateQRPreview()">
-                        <input type="tel" id="qr-vcard-phone" placeholder="Teléfono" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2 focus:ring-purple-500" oninput="updateQRPreview()">
-                        <input type="email" id="qr-vcard-email" placeholder="Correo electrónico" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2 focus:ring-purple-500" oninput="updateQRPreview()">
-                        <input type="text" id="qr-vcard-company" placeholder="Empresa (Opcional)" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-purple-500" oninput="updateQRPreview()">
+                        <input type="text" id="qr-vcard-name" placeholder="Nombre completo" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2" oninput="updateQRPreview()">
+                        <input type="tel" id="qr-vcard-phone" placeholder="Teléfono" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2" oninput="updateQRPreview()">
+                        <input type="email" id="qr-vcard-email" placeholder="Email" class="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2" oninput="updateQRPreview()">
+                        <input type="text" id="qr-vcard-company" placeholder="Empresa" class="w-full px-3 py-2 border border-gray-300 rounded-lg" oninput="updateQRPreview()">
                     </div>
 
                     <div class="border-t pt-4">
-                        <h4 class="font-medium text-gray-900 mb-4">Colores y Gradientes</h4>
-                        
+                        <h4 class="font-medium text-gray-900 mb-4">Colores</h4>
                         <label class="flex items-center gap-2 mb-4 cursor-pointer">
                             <input type="checkbox" id="use-gradient" onchange="toggleGradient()">
-                            <span class="text-sm font-medium text-gray-700">Usar gradiente en el QR</span>
+                            <span class="text-sm font-medium text-gray-700">Usar gradiente nativo</span>
                         </label>
                         
                         <div id="normal-colors" class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Color del QR</label>
-                                <div class="flex items-center gap-2">
-                                    <input type="color" id="qr-color" value="#000000" onchange="updateQRPreview()">
-                                    <span class="text-sm text-gray-600" id="color-value">#000000</span>
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Color de fondo</label>
-                                <div class="flex items-center gap-2">
-                                    <input type="color" id="qr-bg-color" value="#ffffff" onchange="updateQRPreview()">
-                                    <span class="text-sm text-gray-600" id="bg-color-value">#ffffff</span>
-                                </div>
-                            </div>
+                            <div><label class="block text-sm">Color del QR</label><input type="color" id="qr-color" value="#000000" onchange="updateQRPreview()"></div>
+                            <div><label class="block text-sm">Color de fondo</label><input type="color" id="qr-bg-color" value="#ffffff" onchange="updateQRPreview()"></div>
                         </div>
                         
-                        <div id="gradient-colors" class="hidden space-y-3">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Color inicial del gradiente</label>
-                                <div class="flex items-center gap-2">
-                                    <input type="color" id="gradient-start" value="#667eea" onchange="updateQRPreview()">
-                                    <span class="text-sm text-gray-600">Inicio</span>
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Color final del gradiente</label>
-                                <div class="flex items-center gap-2">
-                                    <input type="color" id="gradient-end" value="#764ba2" onchange="updateQRPreview()">
-                                    <span class="text-sm text-gray-600">Fin</span>
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Dirección</label>
-                                <select id="gradient-direction" onchange="updateQRPreview()" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
-                                    <option value="135deg">Diagonal ↘</option>
-                                    <option value="to right">Horizontal →</option>
-                                    <option value="to bottom">Vertical ↓</option>
-                                    <option value="45deg">Diagonal ↗</option>
+                        <div id="gradient-colors" class="hidden grid grid-cols-2 gap-4">
+                            <div><label class="block text-sm">Color 1</label><input type="color" id="gradient-start" value="#ff0000" onchange="updateQRPreview()"></div>
+                            <div><label class="block text-sm">Color 2</label><input type="color" id="gradient-end" value="#ff6600" onchange="updateQRPreview()"></div>
+                            <div class="col-span-2">
+                                <label class="block text-sm">Dirección</label>
+                                <select id="gradient-direction" onchange="updateQRPreview()" class="w-full px-3 py-2 border rounded-lg">
+                                    <option value="135deg">Diagonal</option>
+                                    <option value="to right">Horizontal</option>
+                                    <option value="to bottom">Vertical</option>
                                 </select>
                             </div>
                         </div>
                     </div>
 
                     <div class="border-t pt-4">
-                        <h4 class="font-medium text-gray-900 mb-4">Logo Central</h4>
-                        
-                        <div class="file-input-wrapper mb-4">
-                            <input type="file" id="qr-logo-input" accept="image/*" onchange="handleLogoUpload(event)">
-                            <label for="qr-logo-input" class="file-input-label" id="file-label">
-                                <i class="fas fa-cloud-upload-alt text-lg"></i>
-                                <span>Seleccionar imagen del logo</span>
-                            </label>
+                        <h4 class="font-medium text-gray-900 mb-4">Estilo Avanzado</h4>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm">Puntos</label>
+                                <select id="qr-dot-type" onchange="updateQRPreview()" class="w-full px-3 py-2 border rounded-lg">
+                                    <option value="square">Cuadrados</option>
+                                    <option value="dots">Círculos</option>
+                                    <option value="rounded">Redondeados</option>
+                                    <option value="classy">Clásicos</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm">Esquinas (Ojos)</label>
+                                <select id="qr-corner-type" onchange="updateQRPreview()" class="w-full px-3 py-2 border rounded-lg">
+                                    <option value="square">Cuadradas</option>
+                                    <option value="dot">Puntos</option>
+                                    <option value="extra-rounded">Muy Redondeadas</option>
+                                </select>
+                            </div>
+                            <div class="col-span-2">
+                                <label class="block text-sm">Tamaño del Logo (si aplica)</label>
+                                <input type="range" id="qr-logo-size" min="0.1" max="0.5" step="0.05" value="0.4" onchange="updateQRPreview()" class="w-full">
+                            </div>
                         </div>
-                        
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Forma del logo</label>
-                        <div class="flex gap-3 mb-4">
-                            <div class="shape-selector rounded-full active" onclick="setLogoShape('circle')" title="Circular">
-                                <div class="w-6 h-6 rounded-full bg-gray-400"></div>
-                            </div>
-                            <div class="shape-selector rounded-lg" onclick="setLogoShape('rounded')" title="Redondeado">
-                                <div class="w-6 h-6 rounded bg-gray-400"></div>
-                            </div>
-                            <div class="shape-selector" onclick="setLogoShape('square')" title="Cuadrado" style="border-radius: 4px;">
-                                <div class="w-6 h-6 bg-gray-400"></div>
-                            </div>
-                        </div>
-                        
-                        <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox" id="logo-bg-transparent" onchange="updateQRPreview()">
-                            <span class="text-sm text-gray-700">Fondo transparente del logo</span>
-                        </label>
                     </div>
 
                     <div class="border-t pt-4">
-                        <h4 class="font-medium text-gray-900 mb-4">Marco del QR</h4>
+                        <div class="file-input-wrapper mb-4">
+                            <input type="file" id="qr-logo-input" accept="image/*" onchange="handleLogoUpload(event)">
+                            <label for="qr-logo-input" class="file-input-label" id="file-label">
+                                <i class="fas fa-image text-lg"></i> <span>Subir Logo</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="border-t pt-4">
+                        <h4 class="font-medium text-gray-900 mb-4">Marco de Presentación</h4>
                         <div class="grid grid-cols-3 gap-3">
-                            <div class="frame-selector active p-3 rounded-lg bg-gray-50 text-center" onclick="setFrame('none')" data-frame="none">
-                                <div class="w-12 h-12 mx-auto mb-2 bg-white border-2 border-gray-300"></div>
-                                <span class="text-xs">Simple</span>
-                            </div>
-                            <div class="frame-selector p-3 rounded-lg bg-gray-50 text-center" onclick="setFrame('rounded')" data-frame="rounded">
-                                <div class="w-12 h-12 mx-auto mb-2 bg-white border-2 border-gray-300 rounded-xl"></div>
-                                <span class="text-xs">Redondeado</span>
-                            </div>
-                            <div class="frame-selector p-3 rounded-lg bg-gray-50 text-center" onclick="setFrame('circle')" data-frame="circle">
-                                <div class="w-12 h-12 mx-auto mb-2 bg-white border-2 border-gray-300 rounded-full"></div>
-                                <span class="text-xs">Circular</span>
-                            </div>
-                            <div class="frame-selector p-3 rounded-lg bg-gray-50 text-center" onclick="setFrame('dotted')" data-frame="dotted">
-                                <div class="w-12 h-12 mx-auto mb-2 bg-white border-2 border-dotted border-purple-500"></div>
-                                <span class="text-xs">Punteado</span>
-                            </div>
-                            <div class="frame-selector p-3 rounded-lg bg-gray-50 text-center" onclick="setFrame('glow')" data-frame="glow">
-                                <div class="w-12 h-12 mx-auto mb-2 bg-white border-2 border-purple-500 shadow-lg shadow-purple-300"></div>
-                                <span class="text-xs">Brillo</span>
-                            </div>
-                            <div class="frame-selector p-3 rounded-lg bg-gray-50 text-center" onclick="setFrame('neon')" data-frame="neon">
-                                <div class="w-12 h-12 mx-auto mb-2 bg-white border-2 border-purple-500 shadow-[0_0_10px_#667eea]"></div>
-                                <span class="text-xs">Neón</span>
-                            </div>
+                            <div class="frame-selector active p-2 border text-center rounded" onclick="setFrame('none')" data-frame="none">Simple</div>
+                            <div class="frame-selector p-2 border text-center rounded" onclick="setFrame('rounded')" data-frame="rounded">Redondeado</div>
+                            <div class="frame-selector p-2 border text-center rounded" onclick="setFrame('neon')" data-frame="neon">Neón</div>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4 border-t pt-4">
-                        <button onclick="saveQR()" class="gradient-bg text-white py-3 rounded-lg font-semibold hover:opacity-90 transition flex items-center justify-center gap-2">
-                            <span id="save-spinner" class="hidden loading-spinner"></span>
-                            <i class="fas fa-save" id="save-icon"></i>
-                            Guardar en Cuenta
-                        </button>
-                        <button onclick="downloadFullQR()" class="bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition flex items-center justify-center gap-2">
-                            <i class="fas fa-download"></i>
-                            Descargar Imagen
+                    <div class="border-t pt-4">
+                        <button onclick="saveQR()" class="w-full gradient-bg text-white py-3 rounded-lg font-bold mb-2">
+                            <span id="save-spinner" class="hidden loading-spinner mr-2"></span><i class="fas fa-save" id="save-icon"></i> Guardar en mi cuenta
                         </button>
                     </div>
                 </div>
 
-                <div class="lg:col-span-2 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl p-6 flex flex-col items-center justify-center pattern-grid sticky top-4">
-                    <h4 class="font-medium text-gray-900 mb-4">Vista Previa Final</h4>
+                <div class="lg:col-span-2 bg-gray-100 rounded-xl p-6 flex flex-col items-center justify-center sticky top-4 h-fit">
+                    <h4 class="font-medium text-gray-900 mb-4">Vista Previa</h4>
                     
-                    <div id="full-qr-container" class="bg-white p-6 rounded-2xl shadow-2xl">
-                        <div id="qr-display-name" class="text-center text-lg font-bold text-gray-800 mb-4 hidden"></div>
+                    <div id="full-qr-container" class="bg-white p-6 rounded-2xl shadow-xl w-full max-w-sm text-center">
+                        <div id="qr-display-name" class="font-bold text-lg mb-4 hidden"></div>
                         <div id="qr-frame-container" class="qr-frame mx-auto">
-                            <div id="qrcode"></div>
-                            <div id="qr-logo" class="qr-logo-container hidden">
-                                <img id="qr-logo-img" src="" alt="Logo">
-                            </div>
-                        </div>
-                        <div class="mt-4 text-center">
-                            <p class="text-xs text-gray-400">Scan me</p>
-                            <p class="text-xs text-gray-300 mt-1">powered by YouQR</p>
-                        </div>
+                            <div id="qrcode"></div> </div>
+                        <p class="text-xs text-gray-400 mt-4">Scan me</p>
                     </div>
                     
-                    <div class="mt-6 flex gap-2">
-                        <button onclick="downloadQR('png')" class="px-3 py-2 bg-white text-gray-700 rounded-lg hover:bg-gray-50 transition text-xs shadow">
-                            <i class="fas fa-download mr-1"></i>Solo QR
-                        </button>
-                        <button onclick="downloadFullQR()" class="px-3 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition text-xs shadow">
-                            <i class="fas fa-image mr-1"></i>Completo
+                    <div class="mt-6 flex flex-col items-center gap-2 w-full">
+                        <div class="flex gap-2 w-full justify-center">
+                            <select id="export-format" class="px-3 py-2 text-sm border border-gray-300 rounded-lg">
+                                <option value="png">PNG (Normal)</option>
+                                <option value="svg">SVG (Vectorial)</option>
+                                <option value="jpeg">JPG</option>
+                            </select>
+                            <button onclick="downloadNativeQR()" class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg font-medium shadow-sm hover:bg-gray-50">
+                                <i class="fas fa-download mr-1"></i> QR Limpio
+                            </button>
+                        </div>
+                        <button onclick="downloadFullQR()" class="w-full px-4 py-2 bg-purple-600 text-white rounded-lg font-medium shadow-sm hover:bg-purple-700">
+                            <i class="fas fa-image mr-1"></i> Descargar Imagen Completa (con marco)
                         </button>
                     </div>
                 </div>
@@ -481,43 +269,7 @@
         </div>
     </div>
 
-    <div id="edit-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-        <div class="relative top-20 mx-auto p-5 border w-full max-w-lg shadow-lg rounded-xl bg-white animate-slide-up">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl font-bold text-gray-900">Editar Destino del QR</h3>
-                <button onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600">
-                    <i class="fas fa-times text-xl"></i>
-                </button>
-            </div>
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Slug del QR</label>
-                    <input type="text" id="edit-slug" readonly class="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-500">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Nuevo destino URL</label>
-                    <input type="url" id="edit-target" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
-                </div>
-                <button onclick="updateQR()" class="w-full gradient-bg text-white py-2 rounded-lg font-semibold hover:opacity-90 transition">Actualizar Destino</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="details-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-        <div class="relative top-20 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-xl bg-white animate-slide-up">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl font-bold text-gray-900">Estadísticas del QR</h3>
-                <button onclick="closeDetailsModal()" class="text-gray-400 hover:text-gray-600">
-                    <i class="fas fa-times text-xl"></i>
-                </button>
-            </div>
-            <div id="qr-details-content" class="space-y-4"></div>
-        </div>
-    </div>
-
-    <div id="toast" class="hidden fixed bottom-5 right-5 bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg transform transition-all duration-300 z-50">
-        <span id="toast-message"></span>
-    </div>
+    <div id="toast" class="hidden fixed bottom-5 right-5 bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg z-50"><span id="toast-message"></span></div>
 
     <script src="js/config.js"></script>
     <script src="js/app.js"></script>
